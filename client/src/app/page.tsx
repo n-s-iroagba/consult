@@ -1,33 +1,26 @@
 // pages/index.tsx
 'use client'
 import React, { useState, useEffect } from 'react';
+import { Event } from './attend/page';
 import Head from 'next/head';
 import Link from 'next/link';
 import { 
   Shield, 
   Users, 
-  Award, 
   Calendar, 
   MapPin, 
   Mail, 
-  Phone, 
   ChevronRight, 
   Play, 
   CheckCircle, 
   Lock,
   Eye,
   Zap,
-  Globe,
   ArrowRight,
   Star,
-  TrendingUp,
-  Clock,
   Building2,
-  Briefcase
 } from 'lucide-react';
-
-const HomePage: React.FC = () => {
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
+import api from '@/lib';
 
   const testimonials = [
     {
@@ -52,44 +45,7 @@ const HomePage: React.FC = () => {
       rating: 5
     }
   ];
-
-  const upcomingEvents = [
-    {
-      id: 1,
-      title: "Enterprise Security Leadership Summit 2024",
-      date: "2024-09-25",
-      time: "09:00 AM",
-      location: "Eko Hotel, Lagos",
-      price: "₦250,000",
-      category: "Executive Summit",
-      attendees: "200+ CISOs",
-      description: "Strategic cybersecurity leadership for C-suite executives"
-    },
-    {
-      id: 2,
-      title: "Advanced Penetration Testing Masterclass",
-      date: "2024-10-15",
-      time: "10:00 AM", 
-      location: "Transcorp Hilton, Abuja",
-      price: "₦180,000",
-      category: "Technical Workshop",
-      attendees: "Security Professionals",
-      description: "Hands-on ethical hacking and vulnerability assessment"
-    },
-    {
-      id: 3,
-      title: "Cloud Security Architecture Bootcamp",
-      date: "2024-11-08",
-      time: "09:00 AM",
-      location: "Online & Hybrid",
-      price: "₦120,000",
-      category: "Certification Program",
-      attendees: "Cloud Architects",
-      description: "Comprehensive AWS, Azure, and GCP security training"
-    }
-  ];
-
-  const enterpriseServices = [
+    const enterpriseServices = [
     {
       icon: Shield,
       title: "Enterprise Security Assessment",
@@ -119,17 +75,37 @@ const HomePage: React.FC = () => {
       price: "From ₦5,000,000"
     }
   ];
-
-  const stats = [
+   const stats = [
     { number: "500+", label: "Enterprise Clients", sublabel: "Across 15 Countries" },
     { number: "99.7%", label: "Threat Prevention", sublabel: "Success Rate" },
     { number: "24/7", label: "SOC Monitoring", sublabel: "Never Sleep" },
     { number: "50+", label: "Security Experts", sublabel: "Certified Professionals" }
   ];
-
-  const clientLogos = [
+   const clientLogos = [
     "First Bank", "GTBank", "Access Bank", "Dangote Group", "MTN Nigeria", "Airtel", "Shell Nigeria", "Total Nigeria"
   ];
+const HomePage: React.FC = () => {
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [upcomingEvents, setEvents] = useState<Event[]>([]);
+
+
+
+
+    useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await api.get<Event[]>('/api/events'); // Replace with your API route
+        setEvents(res.data);
+      } catch (err) {
+        console.error('Failed to fetch events:', err);
+      }
+    };
+
+    fetchEvents();
+  }, [])
+ 
+
+ 
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -427,10 +403,7 @@ const HomePage: React.FC = () => {
                         <MapPin className="h-4 w-4 mr-3 text-cyan-400" />
                         {event.location}
                       </div>
-                      <div className="flex items-center text-slate-300">
-                        <Users className="h-4 w-4 mr-3 text-cyan-400" />
-                        For {event.attendees}
-                      </div>
+                     
                     </div>
                     
                     <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">

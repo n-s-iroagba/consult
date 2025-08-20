@@ -1,8 +1,8 @@
 import express from 'express';
-import { createBankDetails, createCryptoWallet, createEvent, deleteBankDetails, deleteCryptoWallet, deleteEvent, getBankDetails, getCryptoWallets, getEventById, getEvents, updateBankDetails, updateCryptoWallet, updateEvent } from './controller';
+import { createBankDetails, createCryptoWallet, createEvent, deleteBankDetails, deleteCryptoWallet, deleteEvent, getBankDetails, getCryptoWallets, getEventById, getEvents, sendPaymentInstructions, updateBankDetails, updateCryptoWallet, updateEvent } from './controller';
 
 const router = express.Router();
-
+router.post('/payment-instructions',sendPaymentInstructions)
 router.post('/', createEvent);
 router.get('/', getEvents);
 router.get('/:id', getEventById);

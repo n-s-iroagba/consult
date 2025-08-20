@@ -2,7 +2,84 @@ import { Request, Response } from 'express';
 import Event from './Event';
 import BankDetails from './Bank';
 import CryptoWallet from './CryptoWallet';
+import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
+dotenv.config();
 
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT) || 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+export const sendPaymentInstructions = async (req: Request, res: Response) => {
+  try {
+    const { email, paymentType, cryptoSymbol } = req.body;
+
+    if (!email || !paymentType) {
+      return res.status(400).json({ message: 'Email and paymentType are required' });
+    }
+
+    let mailContent = '';
+
+    if (paymentType === 'crypto') {
+      if (!cryptoSymbol) {
+        return res.status(400).json({ message: 'cryptoSymbol is required for crypto payments' });
+      }
+
+      const wallet = await CryptoWallet.findOne({ where: { symbol: cryptoSymbol } });
+      if (!wallet) {
+        return res.status(404).json({ message: 'Crypto wallet not found' });
+      }
+
+      mailContent = `
+        <h2>Crypto Payment Instructions</h2>
+        <p>Please send the payment to the following wallet:</p>
+        <ul>
+          <li><strong>Currency:</strong> ${wallet.name} (${wallet.symbol})</li>
+          <li><strong>Wallet Address:</strong> ${wallet.address}</li>
+        </ul>
+        <p>Once the payment is confirmed, your registration will be completed.</p>
+      `;
+    } else if (paymentType === 'bank') {
+      const bank = await BankDetails.findOne(); // Get first bank record or add logic to select one
+      if (!bank) {
+        return res.status(404).json({ message: 'Bank details not found' });
+      }
+
+      mailContent = `
+        <h2>Bank Transfer Instructions</h2>
+        <p>Please make the payment to the following bank account:</p>
+        <ul>
+          <li><strong>Bank Name:</strong> ${bank.bankName}</li>
+          <li><strong>Account Name:</strong> ${bank.accountName}</li>
+          <li><strong>Account Number:</strong> ${bank.accountNumber}</li>
+          <li><strong>SWIFT Code:</strong> ${bank.swiftCode}</li>
+          <li><strong>Routing Number:</strong> ${bank.routingNumber}</li>
+        </ul>
+        <p>Once the payment is confirmed, your registration will be completed.</p>
+      `;
+    } else {
+      return res.status(400).json({ message: 'Invalid paymentType' });
+    }
+
+    await transporter.sendMail({
+      from: `"CyberGuard Pro" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: 'Payment Instructions',
+      html: mailContent,
+    });
+
+    return res.status(200).json({ message: 'Payment instructions sent successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Failed to send payment instructions', error: err });
+  }
+};
 // Create
 export const createEvent = async (req: Request, res: Response) => {
   try {

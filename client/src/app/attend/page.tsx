@@ -1,29 +1,22 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
  ExternalLink, AlertCircle,
  X
 } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import api from '@/lib'; // adjust path
 
-interface Event {
-  id: number;
-  title: string;
-  date: string;
-  time: string;
-  endDate?: string;
-  location: string;
-  price: number;
-  currency: string;
-  category: string;
-  level: string;
-  duration: string;
-  capacity: number;
-  enrolled: number;
-  instructor: string;
-  rating: number;
-  description: string;
-  highlights: string[];
-  featured: boolean;
+export interface Event  {
+ id: number;
+ title: string;
+ date: string;
+ time: string;
+ location: string;
+ price: string;
+ category: string;
+ attendees: string;
+ description: string;
 }
 
 interface CryptoWallet {
@@ -32,49 +25,24 @@ interface CryptoWallet {
   name: string;
 }
 
-interface PaymentDetails {
-  crypto: Record<string, CryptoWallet>;
-  bank: {
+interface Bank{
     bankName: string;
     accountName: string;
     accountNumber: string;
     swiftCode: string;
     routingNumber: string;
   };
-}
 
 const EventsPaymentSystem = () => {
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(  {
-      id: 1,
-      title: "Enterprise Security Leadership Summit 2024",
-      date: "2024-09-25",
-      time: "09:00 AM",
-      endDate: "2024-09-26",
-      location: "Eko Hotel & Suites, Lagos",
-      price: 250000,
-      currency: "NGN",
-      category: "Executive Summit",
-      level: "Executive",
-      duration: "2 Days",
-      capacity: 200,
-      enrolled: 156,
-      instructor: "Dr. Sarah Johnson & Panel",
-      rating: 4.9,
-      description: "Strategic cybersecurity leadership for C-suite executives and senior management. Learn to build security culture, manage risk, and drive organizational security transformation.",
-      highlights: [
-        "Executive Security Strategy Development",
-        "Board-Level Risk Communication",
-        "Security ROI & Budget Optimization",
-        "Crisis Leadership & Incident Management",
-        "Regulatory Compliance Frameworks"
-      ],
-      featured: true
-    },);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showPayment, setShowPayment] = useState(true);
-  const [filterCategory, setFilterCategory] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'crypto'>('bank');
   const [cryptoCurrency, setCryptoCurrency] = useState('');
+  const [selectWalletAddress,setSelectAddress]= useState<CryptoWallet|null>(null)
+  const [addresses,setAddresses] = useState<CryptoWallet[]>([])
+  const [paymentDetails,setPaymentDetails]= useState<Bank|null>()
+  const [submitting, setSubmitting] = useState(false);
+  const {id}= useParams()
   // Payment form states
   const [paymentStep, setPaymentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -84,40 +52,36 @@ const EventsPaymentSystem = () => {
     country: '',
   });
   const [copiedWallet, setCopiedWallet] = useState('');
+ const [loading, setLoading] = useState(true); // Loading state
 
-const walletAddress =    {
-      bitcoin: { 
-        address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh", 
-        symbol: "BTC",
-        name: "Bitcoin"
-      },
-      ethereum: { 
-        address: "0x742c4B1c1A7f47d1A1A1A1A1A1A1A1A1A1A1A1A1", 
-        symbol: "ETH",
-        name: "Ethereum"
-      },
-      usdt: { 
-        address: "TG3XXyEbCzLEBPrXL8zZJ1Y8vZZGXVVGXV", 
-        symbol: "USDT",
-        name: "Tether USD"
-      },
-      usdc: { 
-        address: "0x742c4B1c1A7f47d1A1A1A1A1A1A1A1A1A1A1A1A2", 
-        symbol: "USDC",
-        name: "USD Coin"
-      }
-    }
 
-  const paymentDetails = {
- 
-    bank: {
-      bankName: "First Bank Nigeria",
-      accountName: "CyberGuard Pro Limited",
-      accountNumber: "3087654321",
-      swiftCode: "FBNKNGLA",
-      routingNumber: "011000015"
+
+useEffect(() => {
+  if (!id) return;
+
+  const fetchAllData = async () => {
+    try {
+      setLoading(true);
+
+      const [eventRes, cryptoRes, bankRes] = await Promise.all([
+        api.get<Event>(`/events/${id}`),
+        api.get<CryptoWallet[]>('/crypto'),
+        api.get<Bank[]>('/bank'),
+      ]);
+
+      setSelectedEvent(eventRes.data);
+      setAddresses(cryptoRes.data);
+      setPaymentDetails(bankRes.data[0] || null);
+
+    } catch (err) {
+      console.error('Failed to fetch data:', err);
+    } finally {
+      setLoading(false);
     }
   };
+
+  fetchAllData();
+}, [id]);
 
   const categories = ['All', 'Executive Summit', 'Technical Workshop', 'Certification Program', 'Workshop'];
   const countries = ['Nigeria', 'Ghana', 'Kenya', 'South Africa', 'Egypt', 'Morocco', 'United States', 'United Kingdom', 'Canada', 'Other'];
@@ -136,9 +100,34 @@ const walletAddress =    {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+ 
     if (paymentStep === 1) {
       setPaymentStep(2);
     }
+   
+  };
+
+  const submit = () => {
+   
+    try{
+    setSubmitting(true);
+    api.post('/payment-instructions', {
+      eventId: selectedEvent?.id,
+      email: formData.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      country: formData.country,
+      paymentMethod,
+      cryptoCurrency,
+      selectWalletAddress,
+      paymentDetails
+    });
+    setSubmitting(false);
+    
+    }catch(error){
+      console.error('Error submitting form:', error);
+    }
+   
   };
 
   const copyToClipboard = (text: string, type: string) => {
@@ -299,10 +288,13 @@ const walletAddress =    {
               />
               <button
                 type="button"
-                onClick={() => navigator.clipboard.writeText('abc123456')}
+                disabled={submitting}
+                onClick={() => {navigator.clipboard.writeText('abc123456')
+                  submit()
+                }}
                 className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-xl hover:scale-105 transition-transform"
               >
-                Copy
+                {submitting ? 'Copying...' : 'Copy'}
               </button>
             </div>
             <p className="text-sm text-gray-500">Send the exact amount to this address. Your booking will be confirmed after payment is verified.</p>
@@ -319,10 +311,14 @@ const walletAddress =    {
                     <>
                     <div className="mt-8">
                       <button
-                        onClick={() => setPaymentStep(3)}
+                        disabled={submitting}
+                        onClick={() => {
+                          submit();
+                          setPaymentStep(3);
+                        }}
                         className=" text-slate-900 w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:scale-105 flex items-center justify-center transition-transform"
                       >
-                        Get Payment Details
+                        {submitting ? 'Getting Payment Details...' : 'Get Payment Details'}
                         <ExternalLink className="ml-2 h-5  text-slate-900 w-5" />
                       </button>
                     </div>
@@ -340,17 +336,17 @@ const walletAddress =    {
         )}
 
               {/* Step 3: Bank Details & Confirmation */}
-              {paymentStep === 3 && paymentMethod === 'bank' && (
+              {paymentStep === 3 && paymentMethod === 'bank' && paymentDetails&& (
                 <div className="space-y-6">
                   <h3 className="text-xl font-bold text-white">Bank Transfer Details</h3>
                   <div className="bg-slate-700/30 rounded-xl p-6 border border-slate-600/50">
                     <div className="text-slate-400">
-                      <div><strong>Bank Name:</strong> {paymentDetails.bank.bankName}</div>
-                      <div><strong>Account Name:</strong> {paymentDetails.bank.accountName}</div>
-                      <div><strong>Account Number:</strong> {paymentDetails.bank.accountNumber}</div>
-                      <div><strong>SWIFT Code:</strong> {paymentDetails.bank.swiftCode}</div>
-                      <div><strong>Routing Number:</strong> {paymentDetails.bank.routingNumber}</div>
-                      <div><strong>Amount:</strong> <span className="text-white">{formatPrice(selectedEvent.price, selectedEvent.currency)}</span></div>
+                      <div><strong>Bank Name:</strong> {paymentDetails.bankName}</div>
+                      <div><strong>Account Name:</strong> {paymentDetails.accountName}</div>
+                      <div><strong>Account Number:</strong> {paymentDetails.accountNumber}</div>
+                      <div><strong>SWIFT Code:</strong> {paymentDetails.swiftCode}</div>
+                      <div><strong>Routing Number:</strong> {paymentDetails.routingNumber}</div>
+                      <div><strong>Amount:</strong> <span className="text-white">{formatPrice(Number(selectedEvent.price), '$')}</span></div>
                     </div>
                   </div>
                   <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-start space-x-3">
