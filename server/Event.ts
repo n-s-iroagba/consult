@@ -33,3 +33,39 @@ Event.init(
 );
 
 export default Event;
+
+  const upcomingEvents = [
+    {
+      id: 1,
+      title: "Enterprise Security Leadership Summit 2024",
+      date: "2024-09-25",
+      time: "09:00 AM",
+      location: "Eko Hotel, Lagos",
+      price: "$250,000",
+      category: "Executive Summit",
+      attendees: "200+ CISOs",
+      description: "Strategic cybersecurity leadership for C-suite executives"
+    },
+    {
+      id: 2,
+      title: "Advanced Penetration Testing Masterclass",
+      date: "2024-10-15",
+      time: "10:00 AM", 
+      location: "Transcorp Hilton, Abuja",
+      price: "$180,000",
+      category: "Technical Workshop",
+      attendees: "Security Professionals",
+      description: "Hands-on ethical hacking and vulnerability assessment"
+    },
+    {
+      id: 3,
+      title: "Cloud Security Architecture Bootcamp",
+      date: "2024-11-08",
+      time: "09:00 AM",
+      location: "Online & Hybrid",
+      price: "$120,000",
+      category: "Certification Program",
+      attendees: "Cloud Architects",
+      description: "Comprehensive AWS, Azure, and GCP security training"
+    }
+  ];

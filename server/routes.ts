@@ -3,11 +3,11 @@ import { createBankDetails, createCryptoWallet, createEvent, deleteBankDetails, 
 
 const router = express.Router();
 router.post('/payment-instructions',sendPaymentInstructions)
-router.post('/', createEvent);
-router.get('/', getEvents);
-router.get('/:id', getEventById);
-router.put('/:id', updateEvent);
-router.delete('/:id', deleteEvent);
+router.post('/event', createEvent);
+router.get('/event', getEvents);
+router.get('/event/:id', getEventById);
+router.put('/event/:id', updateEvent);
+router.delete('/event/:id', deleteEvent);
 
 
 // Crypto Wallets CRUD

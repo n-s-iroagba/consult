@@ -21,24 +21,28 @@ import {
   Building2,
 } from 'lucide-react';
 import api from '@/lib';
+import logo1 from '../images/Tesla,_Inc.-Logomark-Black-Logo.wine.svg'
+import logo2 from '../images/download.jpeg'
+import logo3 from '../images/download.png'
+import Image from 'next/image';
 
   const testimonials = [
     {
       name: "Marcus Thompson",
-      position: "CISO, First Bank Nigeria",
-      company: "First Bank",
-      content: "CyberGuard Pro transformed our security posture completely. Their comprehensive audit revealed critical vulnerabilities we never knew existed, and their remediation strategy was flawless.",
+      position: "CISO, Wells Fargo",
+      company: "Wells Fargo",
+      content: "Elijah Klitz Cyber Consultancy transformed our security posture completely. Their comprehensive audit revealed critical vulnerabilities we never knew existed, and their remediation strategy was flawless.",
       rating: 5
     },
     {
-      name: "Dr. Amina Hassan",
-      position: "IT Director, Lagos State Government",
-      company: "Lagos State",
+      name: "Dr. Kate Welbeck",
+      position: "IT Director, Barclays Bank",
+      company: "Barclays Bank",
       content: "Outstanding cybersecurity expertise. They helped us achieve full compliance with international standards while maintaining operational efficiency. Truly enterprise-grade service.",
       rating: 5
     },
     {
-      name: "James Okafor",
+      name: "James Crown",
       position: "CEO, TechCorp Solutions",
       company: "TechCorp",
       content: "The incident response team's swift action during our security breach was exceptional. They contained the threat within hours and prevented any data loss. Incredible professionals.",
@@ -51,28 +55,28 @@ import api from '@/lib';
       title: "Enterprise Security Assessment",
       description: "Comprehensive security audits, penetration testing, and vulnerability assessments for large-scale infrastructures.",
       features: ["Network Security Audit", "Application Security Testing", "Infrastructure Assessment", "Compliance Reporting"],
-      price: "From ₦2,500,000"
+      price: "From $2,500,000"
     },
     {
       icon: Lock,
       title: "24/7 Managed Security Services",
       description: "Round-the-clock monitoring, threat detection, and incident response with our Security Operations Center.",
       features: ["SIEM Management", "Threat Intelligence", "Incident Response", "Security Monitoring"],
-      price: "From ₦1,800,000/month"
+      price: "From $1,800,000/month"
     },
     {
       icon: Eye,
       title: "Compliance & Risk Management",
       description: "Ensure regulatory compliance with ISO 27001, NIST, GDPR, and local data protection requirements.",
       features: ["Compliance Audit", "Risk Assessment", "Policy Development", "Staff Training"],
-      price: "From ₦3,200,000"
+      price: "From $3,200,000"
     },
     {
       icon: Zap,
       title: "Incident Response & Forensics",
       description: "Rapid response to security breaches with digital forensics and recovery planning services.",
       features: ["Emergency Response", "Digital Forensics", "Recovery Planning", "Legal Support"],
-      price: "From ₦5,000,000"
+      price: "From $5,000,000"
     }
   ];
    const stats = [
@@ -82,7 +86,7 @@ import api from '@/lib';
     { number: "50+", label: "Security Experts", sublabel: "Certified Professionals" }
   ];
    const clientLogos = [
-    "First Bank", "GTBank", "Access Bank", "Dangote Group", "MTN Nigeria", "Airtel", "Shell Nigeria", "Total Nigeria"
+    logo1, logo2, logo3
   ];
 const HomePage: React.FC = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -94,7 +98,7 @@ const HomePage: React.FC = () => {
     useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await api.get<Event[]>('/api/events'); // Replace with your API route
+        const res = await api.get<Event[]>('/event'); // Replace with your API route
         setEvents(res.data);
       } catch (err) {
         console.error('Failed to fetch events:', err);
@@ -117,8 +121,8 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>CyberGuard Pro - Enterprise Cybersecurity Solutions & Training</title>
-        <meta name="description" content="Premier cybersecurity consultancy providing enterprise-grade security solutions, 24/7 monitoring, compliance consulting, and professional training for businesses across Africa." />
+        <title>Elijah Klitz Cyber Consultancy - Enterprise Cybersecurity Solutions & Training</title>
+        <meta name="description" content="Premier cybersecurity consultancy providing enterprise-grade security solutions, 24/7 monitoring, compliance consulting, and professional training for businesses across The world." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -181,7 +185,7 @@ const HomePage: React.FC = () => {
               
               <p className="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-4xl mx-auto">
                 Protect your business with military-grade security solutions. From 24/7 SOC monitoring 
-                to advanced threat intelligence, we secure Africa's largest enterprises.
+                to advanced threat intelligence, we secure The world's largest enterprises.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
@@ -215,13 +219,13 @@ const HomePage: React.FC = () => {
         <section className="py-16 border-t border-slate-800/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <p className="text-slate-400 text-lg font-medium">Trusted by Africa's Leading Enterprises</p>
+              <p className="text-slate-400 text-lg font-medium">Trusted by World's Leading Enterprises</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-8 items-center opacity-60">
               {clientLogos.map((logo, index) => (
                 <div key={index} className="text-center">
                   <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-6 hover:border-cyan-400/30 transition-all duration-300">
-                    <span className="text-slate-300 font-semibold text-sm">{logo}</span>
+                    <Image src={logo} alt={`Logo ${index + 1}`} />
                   </div>
                 </div>
               ))}
@@ -403,7 +407,10 @@ const HomePage: React.FC = () => {
                         <MapPin className="h-4 w-4 mr-3 text-cyan-400" />
                         {event.location}
                       </div>
-                     
+                      <div className="flex items-center text-slate-300">
+                        <Users className="h-4 w-4 mr-3 text-cyan-400" />
+                        For {event.attendees}
+                      </div>
                     </div>
                     
                     <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
@@ -484,7 +491,7 @@ const HomePage: React.FC = () => {
                   </div>
                   
                   <button className="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white py-5 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:scale-105">
-                    Get Free Assessment Worth ₦500,000
+                    Get Free Assessment Worth $500,000
                   </button>
                   
                   <p className="text-xs text-slate-400 text-center">
@@ -534,7 +541,7 @@ const HomePage: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-slate-300 mb-8 max-w-md leading-relaxed">
-                  Africa's premier cybersecurity consultancy, protecting enterprises with military-grade security 
+                  The world's premier cybersecurity consultancy, protecting enterprises with military-grade security 
                   solutions and world-class training programs.
                 </p>
                 <div className="flex space-x-4">
@@ -588,7 +595,7 @@ const HomePage: React.FC = () => {
               <div className="flex flex-col lg:flex-row justify-between items-center">
                 <div className="flex items-center space-x-8 mb-6 lg:mb-0">
                   <p className="text-slate-400 text-sm">
-                    © 2024 CyberGuard Pro. All rights reserved.
+                    © 2024 Elijah Klitz Cyber Consultancy. All rights reserved.
                   </p>
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>

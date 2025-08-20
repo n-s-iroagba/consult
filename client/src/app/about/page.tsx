@@ -21,7 +21,7 @@ const AboutPage: React.FC = () => {
       name: "Dr. Sarah Johnson",
       position: "Chief Executive Officer & Founder",
       image: "/api/placeholder/300/300",
-      bio: "With over 15 years in cybersecurity, Dr. Johnson holds a Ph.D. in Computer Science and multiple CISSP certifications. She founded CyberGuard Pro with a vision to make enterprise-grade security accessible to all businesses.",
+      bio: "With over 15 years in cybersecurity, Dr. Johnson holds a Ph.D. in Computer Science and multiple CISSP certifications. She founded Elijah Klitz Cyber Consultancy with a vision to make enterprise-grade security accessible to all businesses.",
       expertise: ["Strategic Security Planning", "Risk Management", "Compliance Frameworks"],
       education: ["Ph.D. Computer Science - MIT", "M.S. Cybersecurity - Stanford"],
       certifications: ["CISSP", "CISM", "CISSP-ISSMP"]
@@ -56,11 +56,11 @@ const AboutPage: React.FC = () => {
   ];
 
   const milestones = [
-    { year: "2018", title: "Company Founded", description: "CyberGuard Pro established with a mission to democratize enterprise cybersecurity." },
+    { year: "2018", title: "Company Founded", description: "Elijah Klitz Cyber Consultancy established with a mission to democratize enterprise cybersecurity." },
     { year: "2019", title: "First 100 Clients", description: "Reached our first major milestone, serving clients across various industries." },
     { year: "2020", title: "ISO 27001 Certified", description: "Achieved ISO 27001 certification, demonstrating our commitment to information security." },
     { year: "2021", title: "Training Academy Launch", description: "Launched comprehensive cybersecurity training programs and certification courses." },
-    { year: "2022", title: "Regional Expansion", description: "Expanded operations across West Africa, establishing offices in 3 major cities." },
+    { year: "2022", title: "Regional Expansion", description: "Expanded operations across West The world, establishing offices in 3 major cities." },
     { year: "2023", title: "AI Security Division", description: "Launched specialized AI and machine learning security consulting services." },
     { year: "2024", title: "500+ Clients Milestone", description: "Celebrated serving over 500 satisfied clients with zero major security breaches." }
   ];
@@ -68,10 +68,10 @@ const AboutPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>About Us - CyberGuard Pro | Leading Cybersecurity Consultancy</title>
+        <title>About Us - Elijah Klitz Cyber Consultancy | Leading Cybersecurity Consultancy</title>
         <meta
           name="description"
-          content="Learn about CyberGuard Pro's history, mission, and meet our expert leadership team dedicated to securing your digital future."
+          content="Learn about Elijah Klitz Cyber Consultancy's history, mission, and meet our expert leadership team dedicated to securing your digital future."
         />
       </Head>
 
@@ -82,7 +82,7 @@ const AboutPage: React.FC = () => {
             <div className="flex justify-between items-center h-16">
               <Link href="/" className="flex items-center space-x-2">
                 <Shield className="h-8 w-8 text-cyan-400" />
-                <span className="font-bold text-xl">CyberGuard Pro</span>
+                <span className="font-bold text-xl">Elijah Klitz Cyber Consultancy</span>
               </Link>
               <Link href="/" className="text-slate-400 hover:text-white flex items-center space-x-1">
                 <ChevronLeft className="h-4 w-4" />
@@ -95,7 +95,7 @@ const AboutPage: React.FC = () => {
         {/* Hero Section */}
         <section className="pt-32 pb-16 text-center max-w-3xl mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-            About CyberGuard Pro
+            About Elijah Klitz Cyber Consultancy
           </h1>
           <p className="text-lg text-slate-300">
             We are a global cybersecurity consultancy dedicated to protecting businesses of all sizes with enterprise-grade security, training, and innovation.
@@ -173,7 +173,7 @@ const AboutPage: React.FC = () => {
         {/* Footer */}
         <footer className="bg-slate-900 border-t border-slate-700/50 py-10 mt-16">
           <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-            <p className="text-slate-400">© {new Date().getFullYear()} CyberGuard Pro. All rights reserved.</p>
+            <p className="text-slate-400">© {new Date().getFullYear()} Elijah Klitz Cyber Consultancy. All rights reserved.</p>
             <div className="flex space-x-6 text-slate-400">
               <a href="#" className="hover:text-white"><Linkedin className="h-5 w-5" /></a>
               <a href="#" className="hover:text-white"><Twitter className="h-5 w-5" /></a>

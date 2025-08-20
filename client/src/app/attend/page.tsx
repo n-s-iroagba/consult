@@ -35,7 +35,7 @@ interface Bank{
 
 const EventsPaymentSystem = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [showPayment, setShowPayment] = useState(true);
+ 
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'crypto'>('bank');
   const [cryptoCurrency, setCryptoCurrency] = useState('');
   const [selectWalletAddress,setSelectAddress]= useState<CryptoWallet|null>(null)
@@ -51,7 +51,7 @@ const EventsPaymentSystem = () => {
     lastName: '',
     country: '',
   });
-  const [copiedWallet, setCopiedWallet] = useState('');
+
  const [loading, setLoading] = useState(true); // Loading state
 
 
@@ -64,8 +64,8 @@ useEffect(() => {
       setLoading(true);
 
       const [eventRes, cryptoRes, bankRes] = await Promise.all([
-        api.get<Event>(`/events/${id}`),
-        api.get<CryptoWallet[]>('/crypto'),
+        api.get<Event>(`/event/${id}`),
+        api.get<CryptoWallet[]>('/crypto'), 
         api.get<Bank[]>('/bank'),
       ]);
 
@@ -83,20 +83,8 @@ useEffect(() => {
   fetchAllData();
 }, [id]);
 
-  const categories = ['All', 'Executive Summit', 'Technical Workshop', 'Certification Program', 'Workshop'];
-  const countries = ['Nigeria', 'Ghana', 'Kenya', 'South Africa', 'Egypt', 'Morocco', 'United States', 'United Kingdom', 'Canada', 'Other'];
 
-  const handleApplyToAttend = (event: Event) => {
-    setSelectedEvent(event);
-    setShowPayment(true);
-    setPaymentStep(1);
-    setFormData({
-      email: '',
-      firstName: '',
-      lastName: '',
-      country: '',
-    });
-  };
+
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,11 +118,7 @@ useEffect(() => {
    
   };
 
-  const copyToClipboard = (text: string, type: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedWallet(type);
-    setTimeout(() => setCopiedWallet(''), 2000);
-  };
+
 
   const formatPrice = (price: number, currency: string) => {
     return new Intl.NumberFormat('en-NG', {
@@ -145,7 +129,7 @@ useEffect(() => {
   };
 
   const resetPaymentForm = () => {
-    setShowPayment(false);
+
     setPaymentStep(1);
     setSelectedEvent(null);
     setFormData({
@@ -154,10 +138,16 @@ useEffect(() => {
       lastName: '',
       country: '',
     });
-    setCopiedWallet('');
+   
   };
 
-
+ if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-900 via-teal-800 to-teal-900">
+        <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-black font-inter">
       {/* Header & Filters (unchanged) */}
@@ -165,7 +155,7 @@ useEffect(() => {
 
 
       {/* Payment Modal */}
-      {showPayment && selectedEvent && (
+      { selectedEvent && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 rounded-2xl max- text-slate-900 w-2xl  text-slate-900 w-full max-h-[90vh] overflow-y-auto">
             <div className="p-8">
@@ -217,7 +207,6 @@ useEffect(() => {
     Select Country
   </option>
   <option value="us">United States</option>
-  <option value="ng">Nigeria</option>
   <option value="uk">United Kingdom</option>
   <option value="ca">Canada</option>
   <option value="au">Australia</option>
