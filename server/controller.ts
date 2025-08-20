@@ -4,6 +4,8 @@ import BankDetails from './Bank';
 import CryptoWallet from './CryptoWallet';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
+import Attendant from './Attendant';
+import { Op } from 'sequelize';
 
 dotenv.config();
 
@@ -151,7 +153,7 @@ function generateCryptoEmail(firstName:string, event:Event, wallet:CryptoWallet)
         
         <p><strong>Important:</strong> Please send the exact amount to the wallet address above. After we confirm your payment, you will receive a confirmation email with event access details.</p>
         
-        <p>If you have any questions, please contact our support team at events@cyberguardpro.com.</p>
+        <p>If you have any questions, please contact our support team at events@ Klitz Cyber Securitypro.com.</p>
         
         <p>Best regards,<br>The Elijah Klitz Cyber Consultancy Team</p>
       </div>
@@ -202,7 +204,7 @@ function generateBankEmail(firstName:string, event:Event, bank:BankDetails) {
         
         <p><strong>Important:</strong> Please include your name and event title in the transfer reference. After we confirm your payment, you will receive a confirmation email with event access details.</p>
         
-        <p>If you have any questions, please contact our support team at events@cyberguardpro.com.</p>
+        <p>If you have any questions, please contact our support team at events@ Klitz Cyber Securitypro.com.</p>
         
         <p>Best regards,<br>The Elijah Klitz Cyber Consultancy Team</p>
       </div>
@@ -404,5 +406,138 @@ export const deleteBankDetails = async (req: Request, res: Response) => {
   } catch (err) {
     console.error('Failed to delete bank details:', err);
     res.status(500).json({ error: 'Failed to delete bank details', details: err });
+  }
+};
+
+
+// Read Operations
+
+// Get all attendants
+export const getAllAttendants = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const attendants = await Attendant.findAll();
+    res.status(200).json(attendants);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching attendants',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Get attendant by ID
+export const getAttendantById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const attendant = await Attendant.findByPk(id);
+    
+    if (!attendant) {
+      res.status(404).json({
+        success: false,
+        message: 'Attendant not found'
+      });
+      return;
+    }
+
+    res.status(200).json(attendant);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching attendant',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+
+
+// Update attendant by ID
+export const updateAttendant = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, email } = req.body;
+
+    // Check if attendant exists
+    const attendant = await Attendant.findByPk(id);
+    if (!attendant) {
+      res.status(404).json({
+        success: false,
+        message: 'Attendant not found'
+      });
+      return;
+    }
+
+    // Validate required fields
+    if (!firstName || !lastName || !email) {
+      res.status(400).json({
+        success: false,
+        message: 'All fields (firstName, lastName, email) are required'
+      });
+      return;
+    }
+
+    // Check if email is already taken by another attendant
+    const existingAttendant = await Attendant.findOne({
+      where: {
+        email,
+        id: { [Op.ne]: id } // Exclude current attendant from check
+      }
+    });
+
+    if (existingAttendant) {
+      res.status(409).json({
+        success: false,
+        message: 'Email already exists'
+      });
+      return;
+    }
+
+    // Update attendant
+    await attendant.update({
+      firstName,
+      lastName,
+      email
+    });
+
+    res.status(200).json(attendant);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error updating attendant',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+
+// Delete attendant by ID
+export const deleteAttendant = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    // Check if attendant exists
+    const attendant = await Attendant.findByPk(id);
+    if (!attendant) {
+      res.status(404).json({
+        success: false,
+        message: 'Attendant not found'
+      });
+      return;
+    }
+
+    // Delete attendant
+    await attendant.destroy();
+
+    res.status(200).json({
+      success: true,
+      message: 'Attendant deleted successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting attendant',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 };

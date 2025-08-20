@@ -177,7 +177,7 @@ const AboutPage: React.FC = () => {
             <div className="flex space-x-6 text-slate-400">
               <a href="#" className="hover:text-white"><Linkedin className="h-5 w-5" /></a>
               <a href="#" className="hover:text-white"><Twitter className="h-5 w-5" /></a>
-              <a href="mailto:info@cyberguardpro.com" className="hover:text-white"><Mail className="h-5 w-5" /></a>
+              <a href="mailto:info@ Klitz Cyber Securitypro.com" className="hover:text-white"><Mail className="h-5 w-5" /></a>
             </div>
           </div>
         </footer>

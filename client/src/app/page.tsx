@@ -1,7 +1,7 @@
 // pages/index.tsx
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Event } from './attend/page';
+import { Event } from './attend/[id]/page';
 import Head from 'next/head';
 import Link from 'next/link';
 import { 
@@ -24,7 +24,9 @@ import api from '@/lib';
 import logo1 from '../images/Tesla,_Inc.-Logomark-Black-Logo.wine.svg'
 import logo2 from '../images/download.jpeg'
 import logo3 from '../images/download.png'
+import logo4 from '../images/download (1).png'
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
   const testimonials = [
     {
@@ -85,12 +87,13 @@ import Image from 'next/image';
     { number: "24/7", label: "SOC Monitoring", sublabel: "Never Sleep" },
     { number: "50+", label: "Security Experts", sublabel: "Certified Professionals" }
   ];
-   const clientLogos = [
+   const clientLogos = [logo4,
     logo1, logo2, logo3
   ];
 const HomePage: React.FC = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [upcomingEvents, setEvents] = useState<Event[]>([]);
+  const router = useRouter()
 
 
 
@@ -140,8 +143,8 @@ const HomePage: React.FC = () => {
                   <div className="absolute inset-0 bg-cyan-400/20 blur-xl rounded-full"></div>
                 </div>
                 <div>
-                  <span className="text-2xl font-black text-white tracking-tight">CyberGuard</span>
-                  <span className="text-2xl font-light text-cyan-400 tracking-tight">Pro</span>
+                  <span className="text-2xl font-black text-white tracking-tight"> Klitz Cyber Security</span>
+                  <span className="text-2xl font-light text-cyan-400 tracking-tight">Consultancy</span>
                 </div>
               </div>
               <div className="hidden lg:flex items-center space-x-10">
@@ -413,7 +416,8 @@ const HomePage: React.FC = () => {
                       </div>
                     </div>
                     
-                    <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+                    <button
+                    onClick={()=>router.push(`/attend/${event.id}`)} className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
                       Register Now
                     </button>
                   </div>
@@ -507,8 +511,8 @@ const HomePage: React.FC = () => {
                 <div className="w-full h-96 bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl flex items-center justify-center border border-slate-600/50">
                   <div className="text-center text-slate-400">
                     <MapPin className="h-16 w-16 mx-auto mb-6 text-cyan-400" />
-                    <h3 className="text-2xl font-bold text-white mb-2">Our Lagos Headquarters</h3>
-                    <p className="text-lg font-medium mb-4">Plot 123, Adeola Odeku Street, Victoria Island</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Our Florida Headquarters</h3>
+                    <p className="text-lg font-medium mb-4">  1301 Florida Mall Avenue. Orlando. FL.</p>
                     <div className="space-y-2 text-sm">
                       <p>24/7 Security Operations Center</p>
                       <p>Executive Briefing Center</p>
@@ -536,8 +540,8 @@ const HomePage: React.FC = () => {
                     <div className="absolute inset-0 bg-cyan-400/20 blur-xl rounded-full"></div>
                   </div>
                   <div>
-                    <span className="text-3xl font-black text-white tracking-tight">CyberGuard</span>
-                    <span className="text-3xl font-light text-cyan-400 tracking-tight">Pro</span>
+                    <span className="text-3xl font-black text-white tracking-tight"> Klitz Cyber Security</span>
+                    <span className="text-3xl font-light text-cyan-400 tracking-tight">Consultancy</span>
                   </div>
                 </div>
                 <p className="text-slate-300 mb-8 max-w-md leading-relaxed">
