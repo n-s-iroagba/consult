@@ -70,7 +70,7 @@ const VerifyEmail = () => {
     const verificationCode = code.join("");
     setSubmitting(true)
     try {
-      const response =await api.post(API_ROUTES.AUTH.VERIFY_EMAIL, { code: verificationCode, token })
+      const response =await api.post(API_ROUTES.AUTH.VERIFY_EMAIL, { verificationCode: verificationCode, verificationToken: token })
     setAccessToken(response.data.accessToken);
     router.push(`/admin/dashboard`)
     } catch (err) {

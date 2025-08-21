@@ -99,7 +99,7 @@ export default function AdminSignupPage() {
                 value={form[name as keyof FormState]}
                 onChange={handleChange}
                 required
-                className={`w-full p-3 rounded-xl border-2 ${
+                className={`w-full p-3 rounded-xl border-2 text-black ${
                   error?.toLowerCase().includes(name) ? 'border-red-300' : 'border-blue-100'
                 } focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all`}
               />

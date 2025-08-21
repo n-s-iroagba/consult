@@ -388,7 +388,7 @@ const HomePage: React.FC = () => {
                         {event.category}
                       </span>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-white">{event.price}</div>
+                        <div className="text-2xl font-bold text-white">${event.price}</div>
                         <div className="text-slate-400 text-xs">per person</div>
                       </div>
                     </div>
