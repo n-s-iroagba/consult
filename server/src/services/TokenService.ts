@@ -1,14 +1,12 @@
 import jwt, {
   SignOptions,
-  TokenExpiredError,
-  JsonWebTokenError,
-  NotBeforeError,
+
 } from 'jsonwebtoken'
 import { StringValue } from 'ms'
 import logger from '../utils/logger'
 import {
   AccessTokenPayload,
-  EmailVerificationTokenPayload,
+
   JwtPayload,
   ResetPasswordTokenPayload,
   TokenGenerationOptions,

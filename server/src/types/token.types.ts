@@ -1,6 +1,7 @@
 import { JwtPayload as BaseJwtPayload, JwtHeader } from 'jsonwebtoken'
 import { StringValue } from 'ms'
-import { UserWithRole } from '../services/RbacService'
+import Admin from '../models/Admin'
+
 
 export interface JwtPayload extends BaseJwtPayload {
   id?: number
@@ -40,7 +41,7 @@ export interface TokenGenerationOptions {
 }
 
 export interface AccessTokenPayload extends Omit<JwtPayload, 'tokenType'> {
-  user: UserWithRole
+  user: Admin
 }
 
 export interface ResetPasswordTokenPayload extends Omit<JwtPayload, 'tokenType'> {

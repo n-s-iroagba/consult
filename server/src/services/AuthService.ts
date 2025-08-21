@@ -89,7 +89,7 @@ export class AuthService {
         logger.warn('Login attempted by unverified user', { userId: user.id })
         const { verificationToken } =
           await this.verificationService.generateVerificationDetails(user)
-        return { id: user.id, verificationToken }
+        return { verificationToken }
       }
      
       const { accessToken, refreshToken } = this.generateTokenPair(user)

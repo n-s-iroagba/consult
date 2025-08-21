@@ -37,7 +37,7 @@ export class AuthController {
 
       const response: SignUpResponseDto = {
         verificationToken: result.verificationToken,
-        id: user.id,
+    
       }
       res.status(201).json(response)
       return

@@ -21,7 +21,7 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
       date: "",
       time: "",
       location: "",
-      price: "",
+      price: 0,
       category: "",
       attendees: "",
       description: "",
@@ -60,7 +60,7 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
       toast.success(existingEvent ? "Event updated successfully!" : "Event created successfully!")
 
       if (!existingEvent) {
-        setEventData({ id: 0, title: "", date: "", time: "", location: "", price: "", category: "", attendees: "", description: ""   })
+        setEventData({ id: 0, title: "", date: "", time: "", location: "", price: 0, category: "", attendees: "", description: ""   })
       }
       onClose()
     } catch (error) {
@@ -114,11 +114,11 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
           className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
         />
         <input
-          type="text"
+          type="number"
           name="price"
           value={eventData.price}
           onChange={handleChange}
-          placeholder="Price"
+          placeholder="Price in USD"
           className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
         />
         <input
