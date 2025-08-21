@@ -12,7 +12,6 @@ export const baseURL =
     : 'http://localhost:5000/api'; // or your dev server
 
 
-// src/lib/apiutils.ts
 
 
 // Extend the Axios request config type to include our custom _retry property
@@ -23,8 +22,9 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 // Single axios instance
 export const api = axios.create({
   baseURL,
-    headers: {
+  headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json'
   },
   timeout: 30000,
   withCredentials: true
@@ -32,8 +32,14 @@ export const api = axios.create({
 
 // Separate axios instance for refresh token requests to avoid interceptor loops
 const refreshApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5000',
+  baseURL:   process.env.NODE_ENV === 'production'
+    ? 'https://fly.io/apps/dwayno/api'
+    : 'http://localhost:5000/api',
   timeout: 10000,
+    headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
   withCredentials: true
 })
 

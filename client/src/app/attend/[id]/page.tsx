@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import {
  ExternalLink, AlertCircle,
- X
+ 
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import api from '@/lib/api'; // adjust path
@@ -156,8 +156,8 @@ const EventsPaymentSystem = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-900 via-teal-800 to-teal-900">
-        <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="w-16 h-16 border-4 border-slate-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -175,9 +175,7 @@ const EventsPaymentSystem = () => {
                   <h2 className="text-2xl font-bold text-white">Event Registration</h2>
                   <p className="text-slate-400">{selectedEvent.title}</p>
                 </div>
-                <button onClick={resetPaymentForm} className="text-slate-400 hover:text-white">
-                  <X className="h-6 w-6" />
-                </button>
+           
               </div>
 
               {/* Step 1: Personal Info */}
@@ -227,15 +225,14 @@ const EventsPaymentSystem = () => {
                     <option value="" disabled>
                       Select Country
                     </option>
-                    <option value="us">United States</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="ca">Canada</option>
-                    <option value="au">Australia</option>
-                    <option value="in">India</option>
-                    <option value="de">Germany</option>
-                    <option value="fr">France</option>
-                    <option value="br">Brazil</option>
-                    <option value="ng">Nigeria</option>
+                    <option value="UNITED STATES">United States</option>
+                    <option value="UNITED KINGDOM">United Kingdom</option>
+                    <option value="CANADA">Canada</option>
+                    <option value="AUSTRALIA">Australia</option>
+                    <option value="GERMANY">Germany</option>
+                    <option value="FRANCE">France</option>
+                 
+            
                   </select>
 
                   {/* Payment Method */}

@@ -102,7 +102,8 @@ const HomePage: React.FC = () => {
     useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await api.get<Event[]>('/event'); // Replace with your API route
+        const res = await api.get<Event[]>('/event');
+        console.log('res',res) // Replace with your API route
         setEvents(res.data);
       } catch (err) {
         console.error('Failed to fetch events:', err);
