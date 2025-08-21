@@ -12,7 +12,9 @@ interface EmailConfig {
     user: string
     pass: string
   }
-  from: string
+  tls?: {
+    rejectUnauthorized?: boolean
+  }
 }
 
 interface EmailOptions {
@@ -59,18 +61,18 @@ export class EmailService {
     // }
 
     return {
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: 465,
-      // parseInt(process.env.SMTP_PORT || '587'),
-      secure: true,
-      //  process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-      auth: {
-        user: process.env.SMTP_USER || 'wealthfundingtradestation@gmail.com',
-        pass: process.env.SMTP_PASS || 'anft vmyj ianz sftx', // App password for Gmail
-      },
-      from: process.env.FROM_EMAIL || process.env.SMTP_USER || 'noreply@yourapp.com',
-    }
+      host: 'mail.privateemail.com', // Namecheap Private Email SMTP
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: 'support@klitzcybersecurity.com', // Your Namecheap email
+    pass: 'moneyafterGOD4L'  // Your email password
+  },
+  tls: {
+    rejectUnauthorized: false // Only if you encounter certificate issues
   }
+  }
+}
 
   private createTransporter(): Transporter {
     const transporter = nodemailer.createTransport(this.config)
@@ -93,7 +95,7 @@ export class EmailService {
   private async sendEmail(options: EmailOptions): Promise<void> {
     try {
       const mailOptions = {
-        from: this.config.from,
+        
         to: options.to,
         subject: options.subject,
         html: options.html,
