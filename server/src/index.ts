@@ -96,7 +96,7 @@ const seedEvent = async () => {
 // Determine port: 5000 for dev, env port otherwise
 
 
-const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT || 80 : 5000;
+const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT || 3000 : 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);

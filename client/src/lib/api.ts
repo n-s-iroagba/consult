@@ -8,7 +8,7 @@ import axios, {
 
 export const baseURL =
   process.env.NODE_ENV === 'production'
-    ? 'https://fly.io/apps/dwayno/api'
+    ? 'https://dwayno.fly.dev/api'
     : 'http://localhost:5000/api'; // or your dev server
 
 
@@ -33,7 +33,7 @@ export const api = axios.create({
 // Separate axios instance for refresh token requests to avoid interceptor loops
 const refreshApi = axios.create({
   baseURL:   process.env.NODE_ENV === 'production'
-    ? 'https://fly.io/apps/dwayno/api'
+    ? 'https://dwayno.fly.dev/api'
     : 'http://localhost:5000/api',
   timeout: 10000,
     headers: {
