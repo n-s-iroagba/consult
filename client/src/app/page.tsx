@@ -143,7 +143,7 @@ const HomePage: React.FC = () => {
                   <div className="absolute inset-0 bg-cyan-400/20 blur-xl rounded-full"></div>
                 </div>
                 <div>
-                  <span className="text-2xl font-black text-white tracking-tight"> Klitz Cyber Security</span>
+                  <span className="text-2xl font-black text-white tracking-tight"> Klitz Cyber</span>
                   <span className="text-2xl font-light text-cyan-400 tracking-tight">Security</span>
                 </div>
               </div>
