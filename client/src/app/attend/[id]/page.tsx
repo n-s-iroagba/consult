@@ -5,44 +5,19 @@ import {
  X
 } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import api from '@/lib'; // adjust path
-
-export interface Event  {
- id: number;
- title: string;
- date: string;
- time: string;
- location: string;
- price: string;
- category: string;
- attendees: string;
- description: string;
-}
-
-interface CryptoWallet {
-  address: string;
-  symbol: string;
-  name: string;
-}
-
-interface Bank{
-    bankName: string;
-    accountName: string;
-    accountNumber: string;
-    swiftCode: string;
-    routingNumber: string;
-  };
+import api from '@/lib/api'; // adjust path
+import { CryptoWallet, Bank, Event } from '@/types/types';
 
 const EventsPaymentSystem = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
- 
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'crypto'>('bank');
   const [cryptoCurrency, setCryptoCurrency] = useState('');
-  const [selectWalletAddress,setSelectAddress]= useState<CryptoWallet|null>(null)
-  const [addresses,setAddresses] = useState<CryptoWallet[]>([])
-  const [paymentDetails,setPaymentDetails]= useState<Bank|null>()
+  const [selectWalletAddress, setSelectAddress] = useState<CryptoWallet | null>(null);
+  const [addresses, setAddresses] = useState<CryptoWallet[]>([]);
+  const [paymentDetails, setPaymentDetails] = useState<Bank | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const {id}= useParams()
+  const { id } = useParams();
+  
   // Payment form states
   const [paymentStep, setPaymentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -52,73 +27,110 @@ const EventsPaymentSystem = () => {
     country: '',
   });
 
- const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    if (!id) return;
 
+    const fetchAllData = async () => {
+      try {
+        setLoading(true);
 
-useEffect(() => {
-  if (!id) return;
+        const [eventRes, cryptoRes, bankRes] = await Promise.all([
+          api.get<Event>(`/event/${id}`),
+          api.get<CryptoWallet[]>('/crypto'), 
+          api.get<Bank[]>('/bank'),
+        ]);
 
-  const fetchAllData = async () => {
-    try {
-      setLoading(true);
+        setSelectedEvent(eventRes.data);
+        setAddresses(cryptoRes.data);
+        setPaymentDetails(bankRes.data[0] || null);
 
-      const [eventRes, cryptoRes, bankRes] = await Promise.all([
-        api.get<Event>(`/event/${id}`),
-        api.get<CryptoWallet[]>('/crypto'), 
-        api.get<Bank[]>('/bank'),
-      ]);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setSelectedEvent(eventRes.data);
-      setAddresses(cryptoRes.data);
-      setPaymentDetails(bankRes.data[0] || null);
+    fetchAllData();
+  }, [id]);
 
-    } catch (err) {
-      console.error('Failed to fetch data:', err);
-    } finally {
-      setLoading(false);
-    }
+  // Filter addresses based on selected cryptocurrency
+  const getWalletForCurrency = (currency: string): CryptoWallet | null => {
+    const wallet = addresses.find(addr => addr.name.toLowerCase() === currency.toLowerCase());
+    return wallet || null;
   };
 
-  fetchAllData();
-}, [id]);
+  // Update selected wallet when currency changes
+  useEffect(() => {
+    if (cryptoCurrency && addresses.length > 0) {
+      const wallet = getWalletForCurrency(cryptoCurrency);
+      setSelectAddress(wallet);
+    }
+  }, [cryptoCurrency, addresses, getWalletForCurrency]);
 
-
-
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
- 
+    
+    // Validate required fields
+    if (!formData.email || !formData.firstName || !formData.lastName || !formData.country) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
     if (paymentStep === 1) {
       setPaymentStep(2);
     }
-   
   };
 
-  const submit = () => {
-   
-    try{
-    setSubmitting(true);
-    api.post('/payment-instructions', {
-      eventId: selectedEvent?.id,
-      email: formData.email,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      country: formData.country,
-      paymentMethod,
-      cryptoCurrency,
-      selectWalletAddress,
-      paymentDetails
-    });
-    setSubmitting(false);
-    
-    }catch(error){
+  const submit = async () => {
+    try {
+      setSubmitting(true);
+      
+      const payload = {
+        eventId: selectedEvent?.id,
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        country: formData.country,
+        paymentMethod,
+        ...(paymentMethod === 'crypto' ? {
+          cryptoCurrency,
+          selectWalletAddress,
+        } : {
+          paymentDetails
+        })
+      };
+
+      await api.post('/payment-instructions', payload);
+      
+      // Handle success - you might want to show a success message or redirect
+      console.log('Payment instructions sent successfully');
+      
+    } catch (error) {
       console.error('Error submitting form:', error);
+      alert('Failed to process payment instructions. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
-   
   };
 
-
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('Address copied to clipboard!');
+      await submit();
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+      alert('Failed to copy address. Please copy manually.');
+    }
+  };
 
   const formatPrice = (price: number, currency: string) => {
     return new Intl.NumberFormat('en-NG', {
@@ -129,7 +141,6 @@ useEffect(() => {
   };
 
   const resetPaymentForm = () => {
-
     setPaymentStep(1);
     setSelectedEvent(null);
     setFormData({
@@ -138,26 +149,25 @@ useEffect(() => {
       lastName: '',
       country: '',
     });
-   
+    setCryptoCurrency('');
+    setSelectAddress(null);
+    setPaymentMethod('bank');
   };
 
- if (loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-900 via-teal-800 to-teal-900">
         <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
+
   return (
     <div className="min-h-screen bg-black font-inter">
-      {/* Header & Filters (unchanged) */}
-
-
-
       {/* Payment Modal */}
-      { selectedEvent && (
+      {selectedEvent && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 rounded-2xl max- text-slate-900 w-2xl  text-slate-900 w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 rounded-2xl text-slate-900 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="p-8">
               {/* Modal Header */}
               <div className="flex items-center justify-between mb-8">
@@ -166,180 +176,203 @@ useEffect(() => {
                   <p className="text-slate-400">{selectedEvent.title}</p>
                 </div>
                 <button onClick={resetPaymentForm} className="text-slate-400 hover:text-white">
-                  <X className="h-6  text-slate-900 w-6" />
+                  <X className="h-6 w-6" />
                 </button>
               </div>
 
               {/* Step 1: Personal Info */}
-             
-             {paymentStep === 1 && (
-       <form onSubmit={handleFormSubmit} className="space-y-6">
-    {/* First/Last Name */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input
-        type="text"
-        placeholder="First Name"
-        className=" text-slate-900 w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm"
-        required
-      />
-      <input
-        type="text"
-        placeholder="Last Name"
-        className=" text-slate-900 w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm"
-        required
-      />
-    </div>
+              {paymentStep === 1 && (
+                <form onSubmit={handleFormSubmit} className="space-y-6">
+                  {/* First/Last Name */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      placeholder="First Name"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm text-slate-900"
+                      required
+                    />
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      placeholder="Last Name"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm text-slate-900"
+                      required
+                    />
+                  </div>
 
-    {/* Email */}
-    <input
-      type="email"
-      placeholder="Email Address"
-      className=" text-slate-900 w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm"
-      required
-    />
+                  {/* Email */}
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Email Address"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm text-slate-900"
+                    required
+                  />
 
-    {/* Country */}
-   <select
-  className="text-slate-900 w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm"
-  required
->
-  <option value="" disabled selected>
-    Select Country
-  </option>
-  <option value="us">United States</option>
-  <option value="uk">United Kingdom</option>
-  <option value="ca">Canada</option>
-  <option value="au">Australia</option>
-  <option value="in">India</option>
-  <option value="de">Germany</option>
-  <option value="fr">France</option>
-  <option value="br">Brazil</option>
-</select>
+                  {/* Country */}
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm text-slate-900"
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Country
+                    </option>
+                    <option value="us">United States</option>
+                    <option value="uk">United Kingdom</option>
+                    <option value="ca">Canada</option>
+                    <option value="au">Australia</option>
+                    <option value="in">India</option>
+                    <option value="de">Germany</option>
+                    <option value="fr">France</option>
+                    <option value="br">Brazil</option>
+                    <option value="ng">Nigeria</option>
+                  </select>
 
- 
-   <select
-  className="text-slate-900 w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm"
-  required
-  onChange={(e:any) => setPaymentMethod(e.target.value)}
->
-  <option value="" disabled selected>
-    Select Payment Method
-  </option>
-  <option value="bank">Bank Transfer</option>
-  <option value="crypto">Crypto Currency</option>
- 
-</select>
-    <button
-      type="submit"
-      className=" text-slate-900 w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:scale-105 transition-transform"
-    >
-      Continue to Payment
-    </button>
-  </form>
+                  {/* Payment Method */}
+                  <select
+                    value={paymentMethod}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                      setPaymentMethod(e.target.value as 'bank' | 'crypto')
+                    }
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white/80 backdrop-blur-sm text-slate-900"
+                    required
+                  >
+                    <option value="bank">Bank Transfer</option>
+                    <option value="crypto">Cryptocurrency</option>
+                  </select>
 
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:scale-105 transition-transform"
+                  >
+                    Continue to Payment
+                  </button>
+                </form>
               )}
 
               {/* Step 2: Payment Method */}
-  {paymentStep === 2 && (
-   <div className="space-y-6">
-               {/* Payment Method Selection (Crypto or Bank) */}
+              {paymentStep === 2 && (
+                <div className="space-y-6">
+                  {/* Crypto Flow */}
+                  {paymentMethod === "crypto" && (
+                    <div className="space-y-4 bg-white/80 backdrop-blur-sm p-4 rounded-xl shadow">
+                      {/* Currency Select */}
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2">Select Cryptocurrency</label>
+                        <select
+                          value={cryptoCurrency}
+                          onChange={(e) => setCryptoCurrency(e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white text-slate-900"
+                        >
+                          <option value="">Choose currency</option>
+                          {addresses.map((wallet) => (
+                            <option key={wallet.id} value={wallet.name}>
+                              {wallet.name.toUpperCase()}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
- 
+                      {/* Wallet Address & Copy */}
+                      {cryptoCurrency && selectWalletAddress && (
+                        <div className="space-y-2">
+                          <p className="text-gray-700 font-medium">Wallet Address:</p>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              readOnly
+                              value={selectWalletAddress.address}
+                              className="flex-1 px-4 py-3 rounded-xl border border-gray-300 bg-gray-100 outline-none text-slate-900"
+                            />
+                            <button
+                              type="button"
+                              disabled={submitting}
+                              onClick={() => copyToClipboard(selectWalletAddress.address)}
+                              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-xl hover:scale-105 transition-transform disabled:opacity-50"
+                            >
+                              {submitting ? 'Copying...' : 'Copy'}
+                            </button>
+                          </div>
+                          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-sm text-blue-800">
+                              <strong>Amount to send:</strong> {formatPrice(Number(selectedEvent.price), 'USD')} worth of {cryptoCurrency.toUpperCase()}
+                            </p>
+                            <p className="text-sm text-blue-600 mt-2">
+                              Send the exact amount to this address. Your booking will be confirmed after payment is verified.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-    {/* Crypto Flow */}
-    {paymentMethod === "crypto" && (
-      <div className="space-y-4 bg-white/80 backdrop-blur-sm p-4 rounded-xl shadow">
-        {/* Currency Select */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Select Cryptocurrency</label>
-          <select
-            value={cryptoCurrency}
-            onChange={(e) => setCryptoCurrency(e.target.value)}
-            className="text-slate-900 w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white"
-          >
-            <option value="">Choose currency</option>
-            <option value="bitcoin">Bitcoin (BTC)</option>
-            <option value="ethereum">Ethereum (ETH)</option>
-            <option value="usdt">Tether (USDT)</option>
-          </select>
-        </div>
-
-        {/* Wallet Address & Copy */}
-        {cryptoCurrency && (
-          <div className="space-y-2">
-            <p className="text-gray-700 font-medium">Wallet Address:</p>
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                readOnly
-                value={'abc123456'}
-                className="flex-1 text-slate-900 px-4 py-3 rounded-xl border border-gray-300 bg-gray-100 outline-none"
-              />
-              <button
-                type="button"
-                disabled={submitting}
-                onClick={() => {navigator.clipboard.writeText('abc123456')
-                  submit()
-                }}
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-xl hover:scale-105 transition-transform"
-              >
-                {submitting ? 'Copying...' : 'Copy'}
-              </button>
-            </div>
-            <p className="text-sm text-gray-500">Send the exact amount to this address. Your booking will be confirmed after payment is verified.</p>
-          </div>
-        )}
-    </div>
-    )}
-
-
-  
-
-
+                  {/* Bank Transfer Flow */}
                   {paymentMethod === 'bank' && (
                     <>
-                    <div className="mt-8">
-                      <button
-                        disabled={submitting}
-                        onClick={() => {
-                          submit();
-                          setPaymentStep(3);
-                        }}
-                        className=" text-slate-900 w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:scale-105 flex items-center justify-center transition-transform"
-                      >
-                        {submitting ? 'Getting Payment Details...' : 'Get Payment Details'}
-                        <ExternalLink className="ml-2 h-5  text-slate-900 w-5" />
-                      </button>
-                    </div>
-                  
+                      <div className="bg-white/80 backdrop-blur-sm p-4 rounded-xl shadow">
+                        <p className="text-gray-700 mb-4">
+                          Click the button below to get bank transfer details for your payment.
+                        </p>
+                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                          <p className="text-sm text-green-800">
+                            <strong>Amount:</strong> {formatPrice(Number(selectedEvent.price), 'USD')}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-8">
+                        <button
+                          disabled={submitting}
+                          onClick={() => {
+                            submit();
+                            setPaymentStep(3);
+                          }}
+                          className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:scale-105 flex items-center justify-center transition-transform disabled:opacity-50"
+                        >
+                          {submitting ? 'Getting Payment Details...' : 'Get Payment Details'}
+                          <ExternalLink className="ml-2 h-5 w-5" />
+                        </button>
+                      </div>
+                    </>
+                  )}
+
                   <div className="flex space-x-4">
-                    <button onClick={() => setPaymentStep(1)} className="flex-1 bg-slate-700 text-white py-3 rounded-xl hover:bg-slate-600 transition-colors">
+                    <button 
+                      onClick={() => setPaymentStep(1)} 
+                      className="flex-1 bg-slate-700 text-white py-3 rounded-xl hover:bg-slate-600 transition-colors"
+                    >
                       Back
                     </button>
                   </div>
-                
-                </>
+                </div>
               )}
-            
-          </div>
-        )}
 
               {/* Step 3: Bank Details & Confirmation */}
-              {paymentStep === 3 && paymentMethod === 'bank' && paymentDetails&& (
+              {paymentStep === 3 && paymentMethod === 'bank' && paymentDetails && (
                 <div className="space-y-6">
                   <h3 className="text-xl font-bold text-white">Bank Transfer Details</h3>
                   <div className="bg-slate-700/30 rounded-xl p-6 border border-slate-600/50">
-                    <div className="text-slate-400">
+                    <div className="text-slate-400 space-y-2">
                       <div><strong>Bank Name:</strong> {paymentDetails.bankName}</div>
                       <div><strong>Account Name:</strong> {paymentDetails.accountName}</div>
                       <div><strong>Account Number:</strong> {paymentDetails.accountNumber}</div>
                       <div><strong>SWIFT Code:</strong> {paymentDetails.swiftCode}</div>
                       <div><strong>Routing Number:</strong> {paymentDetails.routingNumber}</div>
-                      <div><strong>Amount:</strong> <span className="text-white">{formatPrice(Number(selectedEvent.price), '$')}</span></div>
+                      <div><strong>Amount:</strong> <span className="text-white">{formatPrice(Number(selectedEvent.price), 'USD')}</span></div>
                     </div>
                   </div>
                   <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-start space-x-3">
-                    <AlertCircle className="h-5  text-slate-900 w-5 text-yellow-400 mt-0.5" />
+                    <AlertCircle className="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                     <div className="text-sm text-yellow-100">
                       <div className="font-semibold mb-1">Important Instructions:</div>
                       <ul className="space-y-1 text-yellow-200">
@@ -351,11 +384,17 @@ useEffect(() => {
                     </div>
                   </div>
                   <div className="flex space-x-4">
-                    <button onClick={() => setPaymentStep(2)} className="flex-1 bg-slate-700 text-white py-3 rounded-xl hover:bg-slate-600 transition-colors">
+                    <button 
+                      onClick={() => setPaymentStep(2)} 
+                      className="flex-1 bg-slate-700 text-white py-3 rounded-xl hover:bg-slate-600 transition-colors"
+                    >
                       Back
                     </button>
-                    <button onClick={resetPaymentForm} className="flex-1 bg-cyan-600 text-white py-3 rounded-xl hover:scale-105 transition-transform">
-                      I've Made Payment
+                    <button 
+                      onClick={resetPaymentForm} 
+                      className="flex-1 bg-cyan-600 text-white py-3 rounded-xl hover:scale-105 transition-transform"
+                    >
+                      I&apos;ve Made Payment
                     </button>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 // pages/index.tsx
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Event } from './attend/[id]/page';
+import { Event } from '../types/types';
 import Head from 'next/head';
 import Link from 'next/link';
 import { 
@@ -20,7 +20,7 @@ import {
   Star,
   Building2,
 } from 'lucide-react';
-import api from '@/lib';
+import api from '@/lib/api';
 import logo1 from '../images/Tesla,_Inc.-Logomark-Black-Logo.wine.svg'
 import logo2 from '../images/download.jpeg'
 import logo3 from '../images/download.png'
@@ -33,7 +33,7 @@ import { useRouter } from 'next/navigation';
       name: "Marcus Thompson",
       position: "CISO, Wells Fargo",
       company: "Wells Fargo",
-      content: "Elijah Klitz Cyber Consultancy transformed our security posture completely. Their comprehensive audit revealed critical vulnerabilities we never knew existed, and their remediation strategy was flawless.",
+      content: " Klitz Cyber Security transformed our security posture completely. Their comprehensive audit revealed critical vulnerabilities we never knew existed, and their remediation strategy was flawless.",
       rating: 5
     },
     {
@@ -47,7 +47,7 @@ import { useRouter } from 'next/navigation';
       name: "James Crown",
       position: "CEO, TechCorp Solutions",
       company: "TechCorp",
-      content: "The incident response team's swift action during our security breach was exceptional. They contained the threat within hours and prevented any data loss. Incredible professionals.",
+      content: "The incident response team&apos;s swift action during our security breach was exceptional. They contained the threat within hours and prevented any data loss. Incredible professionals.",
       rating: 5
     }
   ];
@@ -124,12 +124,12 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Elijah Klitz Cyber Consultancy - Enterprise Cybersecurity Solutions & Training</title>
-        <meta name="description" content="Premier cybersecurity consultancy providing enterprise-grade security solutions, 24/7 monitoring, compliance consulting, and professional training for businesses across The world." />
+        <title> Klitz Cyber Security - Enterprise Cybersecurity Solutions & Training</title>
+        <meta name="description" content="Premier cybersecurity Security providing enterprise-grade security solutions, 24/7 monitoring, compliance consulting, and professional training for businesses across The world." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
       </Head>
 
       <div className="min-h-screen bg-black font-inter">
@@ -144,7 +144,7 @@ const HomePage: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-2xl font-black text-white tracking-tight"> Klitz Cyber Security</span>
-                  <span className="text-2xl font-light text-cyan-400 tracking-tight">Consultancy</span>
+                  <span className="text-2xl font-light text-cyan-400 tracking-tight">Security</span>
                 </div>
               </div>
               <div className="hidden lg:flex items-center space-x-10">
@@ -188,7 +188,7 @@ const HomePage: React.FC = () => {
               
               <p className="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-4xl mx-auto">
                 Protect your business with military-grade security solutions. From 24/7 SOC monitoring 
-                to advanced threat intelligence, we secure The world's largest enterprises.
+                to advanced threat intelligence, we secure The world&apos;s largest enterprises.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
@@ -222,7 +222,7 @@ const HomePage: React.FC = () => {
         <section className="py-16 border-t border-slate-800/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <p className="text-slate-400 text-lg font-medium">Trusted by World's Leading Enterprises</p>
+              <p className="text-slate-400 text-lg font-medium">Trusted by World&apos;s Leading Enterprises</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-8 items-center opacity-60">
               {clientLogos.map((logo, index) => (
@@ -251,7 +251,7 @@ const HomePage: React.FC = () => {
                 </span>
               </h2>
               <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-                Comprehensive cybersecurity services designed for enterprises that can't afford downtime or data breaches.
+                Comprehensive cybersecurity services designed for enterprises that can&apos;t afford downtime or data breaches.
               </p>
             </div>
 
@@ -313,7 +313,7 @@ const HomePage: React.FC = () => {
                   </div>
                   
                   <blockquote className="text-2xl md:text-3xl font-light text-white leading-relaxed mb-8 italic">
-                    "{testimonials[activeTestimonial].content}"
+                    &quot;{testimonials[activeTestimonial].content}&quot;
                   </blockquote>
                   
                   <div className="flex items-center justify-center space-x-4">
@@ -511,13 +511,16 @@ const HomePage: React.FC = () => {
                 <div className="w-full h-96 bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl flex items-center justify-center border border-slate-600/50">
                   <div className="text-center text-slate-400">
                     <MapPin className="h-16 w-16 mx-auto mb-6 text-cyan-400" />
-                    <h3 className="text-2xl font-bold text-white mb-2">Our Florida Headquarters</h3>
-                    <p className="text-lg font-medium mb-4">  1301 Florida Mall Avenue. Orlando. FL.</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Our Georgia Headquarters</h3>
+                    <p className="text-lg font-medium mb-4"> 2345 Heritage Park Cir NW, Kennesaw, GA, 30144, USA</p>
                     <div className="space-y-2 text-sm">
                       <p>24/7 Security Operations Center</p>
                       <p>Executive Briefing Center</p>
                       <p>Training Facilities Available</p>
                     </div>
+                       <h3 className="text-2xl font-bold text-white mb-2">Reach Us</h3>
+                    <p className="text-lg font-medium mb-4"> +1 (337) 287-0951</p>
+                  
                     <button className="mt-6 bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg transition-colors">
                       Get Directions
                     </button>
@@ -541,11 +544,11 @@ const HomePage: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-3xl font-black text-white tracking-tight"> Klitz Cyber Security</span>
-                    <span className="text-3xl font-light text-cyan-400 tracking-tight">Consultancy</span>
+                    <span className="text-3xl font-light text-cyan-400 tracking-tight">Security</span>
                   </div>
                 </div>
                 <p className="text-slate-300 mb-8 max-w-md leading-relaxed">
-                  The world's premier cybersecurity consultancy, protecting enterprises with military-grade security 
+                  The world&apos;s premier cybersecurity Security, protecting enterprises with military-grade security 
                   solutions and world-class training programs.
                 </p>
                 <div className="flex space-x-4">
@@ -599,7 +602,7 @@ const HomePage: React.FC = () => {
               <div className="flex flex-col lg:flex-row justify-between items-center">
                 <div className="flex items-center space-x-8 mb-6 lg:mb-0">
                   <p className="text-slate-400 text-sm">
-                    © 2024 Elijah Klitz Cyber Consultancy. All rights reserved.
+                    © 2024  Klitz Cyber Security. All rights reserved.
                   </p>
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -620,7 +623,7 @@ const HomePage: React.FC = () => {
 
       {/* <style jsx global>{`
         .font-inter {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, &apos;Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
         }
         
         html {
