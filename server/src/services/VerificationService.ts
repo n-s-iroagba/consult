@@ -30,7 +30,7 @@ export class VerificationService {
       console.log('VVVV', verificationCode)
 
       await this.userService.updateUserVerification(user, verificationCode, verificationToken)
-      //await this.emailService.sendVerificationEmail(user)
+      await this.emailService.sendVerificationEmail(user,verificationCode)
 
       logger.info('Verification details generated successfully', { userId: user.id })
       return { verificationToken, id: user.id }
@@ -43,9 +43,15 @@ export class VerificationService {
   async regenerateVerificationCode(id: string, token: string): Promise<string> {
     try {
       const user = await this.userService.findUserById(id)
+      const verificationToken = this.tokenService.generateEmailVerificationToken(user)
       if (user.verificationToken !== token) throw new BadRequestError('Token does not match')
-      const { verificationToken } = await this.generateVerificationDetails(user)
-      //await this.emailService.sendVerificationEmail(user)
+          const verificationCode =
+        config.nodeEnv === 'production' ? CodeHelper.generateVerificationCode() : '123456'
+      console.log('VVVV', verificationCode)
+
+      await this.userService.updateUserVerification(user, verificationCode, verificationToken)
+ 
+      await this.emailService.sendVerificationEmail(user,verificationCode)
 
       logger.info('Verification code regenerated', { userId: user.id })
       return verificationToken

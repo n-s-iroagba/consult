@@ -114,12 +114,12 @@ export class AuthService {
 
       const { decoded } = this.tokenService.verifyToken(refreshToken, 'refresh')
 
-      if (!decoded.id) {
+      if (!decoded.AdminId) {
         logger.warn('Invalid refresh token provided')
         throw new BadRequestError('Invalid refresh token')
       }
 
-      const user = await this.adminService.findUserById(decoded.id)
+      const user = await this.adminService.findUserById(decoded.AdminId)
       const newAccessToken = this.tokenService.generateAccessToken(user)
 
       logger.info('Token refreshed successfully', { userId: user.id })
@@ -143,7 +143,7 @@ export class AuthService {
         'email_verification'
       )
       console.log(decoded)
-      const userId = decoded.userId
+      const userId = decoded.AdminId
 
       if (!userId) {
         logger.warn('Invalid verification token provided')

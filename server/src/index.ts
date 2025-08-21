@@ -9,10 +9,6 @@ import authRoutes from './routes/authRoutes';
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like Postman, mobile apps, etc.)
-    if (!origin) return callback(null, true);
     
     const allowedOrigins = [
       'http://localhost:3000',
@@ -22,16 +18,8 @@ app.use(cors({
       'https://www.klitzcybersecurity.com'
     ];
     
-    console.log('🔍 CORS Check - Origin:', origin);
-    
-    if (allowedOrigins.includes(origin)) {
-      console.log('✅ Origin allowed');
-      callback(null, true);
-    } else {
-      console.log('❌ Origin blocked');
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+app.use(cors({
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: [
@@ -41,20 +29,19 @@ app.use(cors({
     'Accept',
     'Authorization',
     'Cache-Control'
-  ],
-  optionsSuccessStatus: 200 // For legacy browser support
+  ]
 }));
 
 // Handle preflight requests explicitly
 app.options('/api', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin',  'https://klitzcybersecurity.com');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+//   next();
+// });
 app.use((req, res, next) => {
  console.log(`${req.method} request to ${req.url}`);
   next();

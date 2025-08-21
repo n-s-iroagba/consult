@@ -13,13 +13,16 @@ const CryptoWallet_1 = __importDefault(require("../models/CryptoWallet"));
 const Event_1 = __importDefault(require("../models/Event"));
 dotenv_1.default.config();
 const transporter = nodemailer_1.default.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: false,
+    host: 'mail.privateemail.com', // Namecheap Private Email SMTP
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: 'support@klitzcybersecurity.com', // Your Namecheap email
+        pass: 'moneyafterGOD4L' // Your email password
     },
+    tls: {
+        rejectUnauthorized: false // Only if you encounter certificate issues
+    }
 });
 // Server function to handle payment instructions
 const sendPaymentInstructions = async (req, res) => {

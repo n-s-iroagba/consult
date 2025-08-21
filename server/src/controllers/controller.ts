@@ -11,10 +11,11 @@ import Event from '../models/Event';
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
+
    host: 'mail.privateemail.com', // Namecheap Private Email SMTP
-  port: 587,
-  secure: false, // true for 465, false for other ports
+  port: 465,
+  secure: true, // true for 465, false for other ports
   auth: {
     user: 'support@klitzcybersecurity.com', // Your Namecheap email
     pass: 'moneyafterGOD4L'  // Your email password
@@ -57,11 +58,15 @@ export const sendPaymentInstructions = async (req:Request, res:Response) => {
         message: 'Event not found' 
       });
     }
-    await Attendant.create({
-      email,
-      firstName,
-      lastName,
-      country
+    await Attendant.findOrCreate({
+      where: {
+        email
+      },
+      defaults: {
+        firstName,
+        lastName,
+        country
+      }
     });
     let mailContent = '';
     let subject = '';
@@ -75,7 +80,7 @@ export const sendPaymentInstructions = async (req:Request, res:Response) => {
       }
 
       const wallet = await CryptoWallet.findOne({ 
-        where: { symbol: cryptoCurrency } 
+        where: { name: cryptoCurrency } 
       });
       
       if (!wallet) {
@@ -108,7 +113,7 @@ export const sendPaymentInstructions = async (req:Request, res:Response) => {
 
     // Send email
     await transporter.sendMail({
-      from: `" Klitz Cyber Security Events" <${process.env.SMTP_USER}>`,
+      from: '"Klitz Cybersecurity" <support@klitzcybersecurity.com>',
       to: email,
       subject: subject,
       html: mailContent,
@@ -170,7 +175,7 @@ function generateCryptoEmail(firstName:string, event:Event, wallet:CryptoWallet)
       </div>
       <div class="footer">
         <p>This is an automated message. Please do not reply to this email.</p>
-        <p>&copy; 2024  Klitz Cyber Security. All rights reserved.</p>
+        <p>&copy; 2025  Klitz Cyber Security. All rights reserved.</p>
       </div>
     </body>
     </html>
@@ -221,7 +226,7 @@ function generateBankEmail(firstName:string, event:Event, bank:BankDetails) {
       </div>
       <div class="footer">
         <p>This is an automated message. Please do not reply to this email.</p>
-        <p>&copy; 2024  Klitz Cyber Security. All rights reserved.</p>
+        <p>&copy; 2025  Klitz Cyber Security. All rights reserved.</p>
       </div>
     </body>
     </html>

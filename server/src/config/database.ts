@@ -3,8 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const sequelize = process.env.NODE_ENV === 'production'
-  ? new Sequelize(process.env.DATABASE_URL!, { // DATABASE_URL should be like mysql://user:pass@host:port/dbname
-      dialect: 'mysql',
+  ? new Sequelize('', {
       logging: false,
     })
   : new Sequelize(

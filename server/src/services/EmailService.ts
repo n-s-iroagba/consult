@@ -3,6 +3,7 @@ import nodemailer, { Transporter } from 'nodemailer'
 
 import logger from '../utils/logger'
 import Admin from '../models/Admin'
+import { transporter } from '../controllers/controller'
 
 interface EmailConfig {
   host: string
@@ -32,70 +33,72 @@ interface EmailOptions {
 
 
 export class EmailService {
-  private transporter: Transporter
-  private config: EmailConfig
+  // private transporter: Transporter
+  // private config: EmailConfig
   private static instance: EmailService
 
   constructor(private readonly clientUrl: string) {
-    this.config = this.getEmailConfig()
-    this.transporter = this.createTransporter()
+    // this.config = this.getEmailConfig()
+    // transporter = this.createTransporter()
   }
 
-  // Singleton pattern for EmailService
-  public static getInstance(clientUrl?: string): EmailService {
-    if (!EmailService.instance) {
-      if (!clientUrl) {
-        throw new Error('ClientUrl is required for first EmailService instantiation')
-      }
-      EmailService.instance = new EmailService(clientUrl)
-    }
-    return EmailService.instance
-  }
+//   // Singleton pattern for EmailService
+//   public static getInstance(clientUrl?: string): EmailService {
+//     if (!EmailService.instance) {
+//       if (!clientUrl) {
+//         throw new Error('ClientUrl is required for first EmailService instantiation')
+//       }
+//       EmailService.instance = new EmailService(clientUrl)
+//     }
+//     return EmailService.instance
+//   }
 
-  private getEmailConfig(): EmailConfig {
-    const requiredEnvVars = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS']
-    const missingVars = requiredEnvVars.filter(varName => !process.env[varName])
+//   private getEmailConfig(): EmailConfig {
+//     const requiredEnvVars = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS']
+//     const missingVars = requiredEnvVars.filter(varName => !process.env[varName])
 
-    // if (missingVars.length > 0) {
-    //   throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`)
-    // }
+//     // if (missingVars.length > 0) {
+//     //   throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`)
+//     // }
 
-    return {
-      host: 'mail.privateemail.com', // Namecheap Private Email SMTP
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: 'support@klitzcybersecurity.com', // Your Namecheap email
-    pass: 'moneyafterGOD4L'  // Your email password
-  },
-  tls: {
-    rejectUnauthorized: false // Only if you encounter certificate issues
-  }
-  }
-}
+//     return {
 
-  private createTransporter(): Transporter {
-    const transporter = nodemailer.createTransport(this.config)
+  
+//      host: 'mail.privateemail.com', // Namecheap Private Email SMTP
+//     port: 465,
+//     secure: true, // true for 465, false for other ports
+//     auth: {
+//       user: 'support@klitzcybersecurity.com', // Your Namecheap email
+//       pass: 'moneyafterGOD4L'  // Your email password
+//     },
+//     tls: {
+//       rejectUnauthorized: false // Only if you encounter certificate issues
+//     }
+//   }
+// }
 
-    // Verify connection configuration on startup
-    transporter.verify((error: any) => {
-      if (error) {
-        logger.error('SMTP connection failed', {
-          error: error.message,
-          host: this.config.host,
-          port: this.config.port,
-        })
-      } else {
-        logger.info('SMTP server is ready to send emails')
-      }
-    })
+//   private createTransporter(): Transporter {
+//     const transporter = nodemailer.createTransport(this.config)
 
-    return transporter
-  }
+//     // Verify connection configuration on startup
+//     transporter.verify((error: any) => {
+//       if (error) {
+//         logger.error('SMTP connection failed', {
+//           error: error.message,
+//           host: this.config.host,
+//           port: this.config.port,
+//         })
+//       } else {
+//         logger.info('SMTP server is ready to send emails')
+//       }
+//     })
+
+//     return transporter
+//   }
   private async sendEmail(options: EmailOptions): Promise<void> {
     try {
       const mailOptions = {
-        
+        from: '"Klitz Cybersecurity" <support@klitzcybersecurity.com>',
         to: options.to,
         subject: options.subject,
         html: options.html,
@@ -103,7 +106,7 @@ export class EmailService {
         attachments: options.attachments || [],
       }
 
-      const info = await this.transporter.sendMail(mailOptions)
+      const info = await transporter.sendMail(mailOptions)
 
       logger.info('Email sent successfully', {
         messageId: info.messageId,
@@ -213,7 +216,7 @@ export class EmailService {
   }
 
   // Verification Email
-  async sendVerificationEmail(user: Admin): Promise<void> {
+  async sendVerificationEmail(user: Admin,code:string): Promise<void> {
     try {
       const verificationUrl = `${this.clientUrl}/verify-email?token=${user.verificationToken}`
       const html = `
@@ -236,7 +239,7 @@ export class EmailService {
                 
                 <div class="details-box">
                   <h3 class="mt-0">Verification Code</h3>
-                  <p style="font-size: 24px; font-weight: bold; color: #007bff; margin: 10px 0;">${user.verificationCode}</p>
+                  <p style="font-size: 24px; font-weight: bold; color: #007bff; margin: 10px 0;">${code}</p>
                   <p><em>You can also use the button below for quick verification</em></p>
                 </div>
                 
@@ -401,63 +404,48 @@ export class EmailService {
 
     return results
   }
+}
 
   // Test email connection
-  async testConnection(): Promise<boolean> {
-    try {
-      await this.transporter.verify()
-      logger.info('Email service connection test passed')
-      return true
-    } catch (error: any) {
-      logger.error('Email service connection test failed', {
-        error: error.message,
-        config: {
-          host: this.config.host,
-          port: this.config.port,
-          user: this.config.auth.user,
-        },
-      })
-      return false
-    }
-  }
+//   async testConnection(): Promise<boolean> {
+//     try {
+//       await transporter.verify()
+//       logger.info('Email service connection test passed')
+//       return true
+//     } catch (error: any) {
+//       logger.error('Email service connection test failed', {
+//         error: error.message,
+//         config: {
+//           host: this.config.host,
+//           port: this.config.port,
+//           user: this.config.auth.user,
+//         },
+//       })
+//       return false
+//     }
+//   }
 
-  // Health check method
-  async healthCheck(): Promise<{
-    status: 'healthy' | 'unhealthy'
-    message: string
-    timestamp: Date
-  }> {
-    try {
-      const isConnected = await this.testConnection()
-      return {
-        status: isConnected ? 'healthy' : 'unhealthy',
-        message: isConnected ? 'Email service is operational' : 'Email service connection failed',
-        timestamp: new Date(),
-      }
-    } catch (error: any) {
-      return {
-        status: 'unhealthy',
-        message: `Email service error: ${error.message}`,
-        timestamp: new Date(),
-      }
-    }
-  }
-}
+//   // Health check method
+//   async healthCheck(): Promise<{
+//     status: 'healthy' | 'unhealthy'
+//     message: string
+//     timestamp: Date
+//   }> {
+//     try {
+//       const isConnected = await this.testConnection()
+//       return {
+//         status: isConnected ? 'healthy' : 'unhealthy',
+//         message: isConnected ? 'Email service is operational' : 'Email service connection failed',
+//         timestamp: new Date(),
+//       }
+//     } catch (error: any) {
+//       return {
+//         status: 'unhealthy',
+//         message: `Email service error: ${error.message}`,
+//         timestamp: new Date(),
+//       }
+//     }
+//   }
+// }
 
 // Update your Payment model to include these new fields:
-export interface PaymentAttributes {
-  id: string
-  reference: string
-  amount: number
-  currency?: string
-  status: 'PENDING' | 'PAID' | 'FAILED'
-  sessionId: string
-  programId: string
-  applicantUserId: string
-  paidAt?: Date
-  receiptFileId?: string // New field
-  receiptLink?: string // New field
-  receiptGeneratedAt?: Date // New field
-  createdAt: Date
-  updatedAt: Date
-}
