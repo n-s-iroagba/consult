@@ -28,7 +28,7 @@ const AdminDashboard = () => {
     todos.push(
       <TodoAlert
             key="event-alert"
-            message="You do not have any events, add events for investors"
+            message="You do not have any events, add events."
             link="/admin/events" heading={""} testId={""}      />,
     )
   }
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
     todos.push(
       <TodoAlert
             key="wallet-alert"
-            message="You do not have any wallets, add wallets to start managing transactions"
+            message="You do not have any wallets, add wallets."
             link="/admin/wallets" heading={"Wallets"} testId={"wallet-alert"} />,
     )
   }
@@ -46,7 +46,7 @@ const AdminDashboard = () => {
     todos.push(
       <TodoAlert
             key="Pending-bank"
-            message="You have pending unverified bank transactions, kindly verify them."
+            message="You have you do not have a bank account."
             link="/admin/bank-details" heading={"Bank Details"} testId={""}      />,
     )
   }
