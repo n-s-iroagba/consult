@@ -19,6 +19,7 @@ import {
   ArrowRight,
   Star,
   Building2,
+  Phone,
 } from 'lucide-react';
 import api from '@/lib/api';
 import logo1 from '../images/Tesla,_Inc.-Logomark-Black-Logo.wine.svg'
@@ -433,50 +434,73 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </section>
-
-        {/* Contact Section */}
-        <section className="py-24 bg-gradient-to-b from-slate-900/50 to-black">
+{/* Contact Section */}
+        <section className="py-12 md:py-24 bg-gradient-to-b from-slate-900/50 to-black">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-16">
-              <div className="space-y-8">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
+              
+              {/* Left Column - Header & Contact Info */}
+              <div className="space-y-6 md:space-y-8">
                 <div>
-                  <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 md:mb-6 tracking-tight">
                     Ready to Secure
                     <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
                       Your Enterprise?
                     </span>
                   </h2>
-                  <p className="text-xl text-slate-300 leading-relaxed">
+                  <p className="text-lg md:text-xl text-slate-300 leading-relaxed">
                     Get a comprehensive security assessment and personalized recommendations from our expert team.
                   </p>
                 </div>
 
-                <div className="space-y-6">
+                {/* Contact Info */}
+                <div className="space-y-4 md:space-y-6">
                   <div className="flex items-center space-x-4">
-                    <div className="bg-gradient-to-br from-cyan-500/20 to-blue-600/20 p-4 rounded-xl border border-cyan-500/20">
-                      <Mail className="h-6 w-6 text-cyan-400" />
+                    <div className="bg-gradient-to-br from-cyan-500/20 to-blue-600/20 p-3 md:p-4 rounded-xl border border-cyan-500/20 flex-shrink-0">
+                      <Mail className="h-5 w-5 md:h-6 md:w-6 text-cyan-400" />
                     </div>
                     <div>
-                    <label className="block text-sm font-semibold text-slate-300 mb-3">Business Email</label>
+                      <p className="text-sm md:text-base font-semibold text-slate-300">Email Us</p>
+                      <p className="text-cyan-400">contact@securitycompany.com</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-gradient-to-br from-cyan-500/20 to-blue-600/20 p-3 md:p-4 rounded-xl border border-cyan-500/20 flex-shrink-0">
+                      <Phone className="h-5 w-5 md:h-6 md:w-6 text-cyan-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm md:text-base font-semibold text-slate-300">Call Us</p>
+                      <p className="text-cyan-400">+1 (337) 287-0951</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Contact Form */}
+              <div className="w-full">
+                <form className="space-y-4 md:space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2 md:mb-3">Business Email</label>
                     <input 
                       type="email" 
-                      className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-3 md:py-4 text-white focus:outline-none focus:border-cyan-400 transition-colors text-sm md:text-base"
                       placeholder="john@company.com"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-semibold text-slate-300 mb-3">Company Name</label>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2 md:mb-3">Company Name</label>
                     <input 
                       type="text" 
-                      className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-3 md:py-4 text-white focus:outline-none focus:border-cyan-400 transition-colors text-sm md:text-base"
                       placeholder="Your Company Ltd"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-slate-300 mb-3">Company Size</label>
-                    <select className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-cyan-400 transition-colors">
+                    <label className="block text-sm font-semibold text-slate-300 mb-2 md:mb-3">Company Size</label>
+                    <select className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-3 md:py-4 text-white focus:outline-none focus:border-cyan-400 transition-colors text-sm md:text-base">
                       <option value="">Select company size</option>
                       <option value="1-50">1-50 employees</option>
                       <option value="51-200">51-200 employees</option>
@@ -486,49 +510,50 @@ const HomePage: React.FC = () => {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-semibold text-slate-300 mb-3">Security Challenge</label>
+                    <label className="block text-sm font-semibold text-slate-300 mb-2 md:mb-3">Security Challenge</label>
                     <textarea 
                       rows={4}
-                      className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-cyan-400 transition-colors resize-none"
+                      className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-3 md:py-4 text-white focus:outline-none focus:border-cyan-400 transition-colors resize-none text-sm md:text-base"
                       placeholder="Tell us about your current security challenges or requirements..."
                     ></textarea>
                   </div>
                   
-                  <button className="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white py-5 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:scale-105">
+                  <button className="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white py-4 md:py-5 rounded-xl font-bold text-base md:text-lg hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:scale-105 active:scale-95">
                     Get Free Assessment Worth $500,000
                   </button>
                   
                   <p className="text-xs text-slate-400 text-center">
                     By submitting, you agree to our privacy policy. No spam, unsubscribe anytime.
                   </p>
-                </div>
+                </form>
               </div>
             </div>
 
             {/* Interactive Map */}
-            <div className="mt-20">
-              <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-2xl p-4 backdrop-blur-sm">
-                <div className="w-full h-96 bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl flex items-center justify-center border border-slate-600/50">
-                  <div className="text-center text-slate-400">
-                    <MapPin className="h-16 w-16 mx-auto mb-6 text-cyan-400" />
-                    <h3 className="text-2xl font-bold text-white mb-2">Our Georgia Headquarters</h3>
-                    <p className="text-lg font-medium mb-4"> 2345 Heritage Park Cir NW, Kennesaw, GA, 30144, USA</p>
-                    <div className="space-y-2 text-sm">
+            <div className="mt-12 md:mt-20">
+              <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-2xl p-3 md:p-4 backdrop-blur-sm">
+                <div className="w-full h-64 sm:h-80 md:h-96 bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-xl flex items-center justify-center border border-slate-600/50">
+                  <div className="text-center text-slate-400 px-4 max-w-lg">
+                    <MapPin className="h-12 w-12 md:h-16 md:w-16 mx-auto mb-4 md:mb-6 text-cyan-400" />
+                    <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Our Georgia Headquarters</h3>
+                    <p className="text-base md:text-lg font-medium mb-3 md:mb-4">2345 Heritage Park Cir NW, Kennesaw, GA, 30144, USA</p>
+                    
+                    <div className="space-y-1 md:space-y-2 text-sm mb-4">
                       <p>24/7 Security Operations Center</p>
                       <p>Executive Briefing Center</p>
                       <p>Training Facilities Available</p>
                     </div>
-                       <h3 className="text-2xl font-bold text-white mb-2">Reach Us</h3>
-                    <p className="text-lg font-medium mb-4"> +1 (337) 287-0951</p>
+                    
+                    <h4 className="text-lg md:text-xl font-bold text-white mb-2">Reach Us</h4>
+                    <p className="text-base md:text-lg font-medium mb-4 text-cyan-400">+1 (337) 287-0951</p>
                   
-                    <button className="mt-6 bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg transition-colors">
+                    <button className="bg-slate-700 hover:bg-slate-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg transition-colors text-sm md:text-base">
                       Get Directions
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </section>
 
@@ -602,7 +627,7 @@ const HomePage: React.FC = () => {
               <div className="flex flex-col lg:flex-row justify-between items-center">
                 <div className="flex items-center space-x-8 mb-6 lg:mb-0">
                   <p className="text-slate-400 text-sm">
-                    © 2024  Klitz Cyber Security. All rights reserved.
+                    © 2025  Klitz Cyber Security. All rights reserved.
                   </p>
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
