@@ -12,7 +12,7 @@ interface EventCardProps {
 
 export default function EventCard({ event, onEdit, onDelete }: EventCardProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all duration-300 overflow-hidden group">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-slate-200 transition-all duration-300 overflow-hidden group">
       <div className="p-6 text-center">
         {/* Title */}
         <h3 className="text-lg font-bold text-gray-900 mb-2">{event.title}</h3>
@@ -50,7 +50,7 @@ export default function EventCard({ event, onEdit, onDelete }: EventCardProps) {
              <div className="flex gap-4 mt-6 justify-end">
             <button
               onClick={onEdit}
-              className="p-2 text-blue-900 hover:bg-blue-100 rounded-lg transition-colors flex items-center gap-1"
+              className="p-2 text-slate-900 hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-1"
             >
               <PencilSquareIcon className="w-5 h-5" />
               <span className="hidden md:inline">Edit</span>

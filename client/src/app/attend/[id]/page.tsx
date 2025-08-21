@@ -4,7 +4,7 @@ import {
  ExternalLink, AlertCircle,
  
 } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import api from '@/lib/api'; // adjust path
 import { CryptoWallet, Bank, Event } from '@/types/types';
 
@@ -17,7 +17,8 @@ const EventsPaymentSystem = () => {
   const [paymentDetails, setPaymentDetails] = useState<Bank | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const { id } = useParams();
-  
+  const router = useRouter();
+
   // Payment form states
   const [paymentStep, setPaymentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -39,12 +40,12 @@ const EventsPaymentSystem = () => {
         const [eventRes, cryptoRes, bankRes] = await Promise.all([
           api.get<Event>(`/event/${id}`),
           api.get<CryptoWallet[]>('/crypto'), 
-          api.get<Bank[]>('/bank'),
+          api.get<Bank>('/bank'),
         ]);
 
         setSelectedEvent(eventRes.data);
         setAddresses(cryptoRes.data);
-        setPaymentDetails(bankRes.data[0] || null);
+        setPaymentDetails(bankRes.data);
 
       } catch (err) {
         console.error('Failed to fetch data:', err);
@@ -120,7 +121,15 @@ const EventsPaymentSystem = () => {
       setSubmitting(false);
     }
   };
-
+const submitPayment = async () => {
+  await submit();
+  setPaymentStep(3);
+}
+const submitCryptoPayment = async (address: string) => {
+  await submit();
+  copyToClipboard(address);
+  setPaymentStep(3);
+}
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -164,6 +173,7 @@ const EventsPaymentSystem = () => {
 
   return (
     <div className="min-h-screen bg-black font-inter">
+   
       {/* Payment Modal */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -175,7 +185,12 @@ const EventsPaymentSystem = () => {
                   <h2 className="text-2xl font-bold text-white">Event Registration</h2>
                   <p className="text-slate-400">{selectedEvent.title}</p>
                 </div>
-           
+            <button
+    onClick={() => router.push('/')}
+    className="bg-slate-700 text-white px-4 py-2 rounded-xl hover:bg-slate-600 transition-colors"
+  >
+    Back
+  </button>
               </div>
 
               {/* Step 1: Personal Info */}
@@ -250,7 +265,7 @@ const EventsPaymentSystem = () => {
 
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:scale-105 transition-transform"
+                    className="w-full bg-gradient-to-r from-cyan-500 to-slate-600 text-white py-4 rounded-xl font-semibold hover:scale-105 transition-transform"
                   >
                     Continue to Payment
                   </button>
@@ -294,17 +309,17 @@ const EventsPaymentSystem = () => {
                             <button
                               type="button"
                               disabled={submitting}
-                              onClick={() => copyToClipboard(selectWalletAddress.address)}
-                              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-xl hover:scale-105 transition-transform disabled:opacity-50"
+                              onClick={() => submitCryptoPayment(selectWalletAddress.address)}
+                              className="bg-gradient-to-r from-cyan-500 to-slate-600 text-white px-4 py-2 rounded-xl hover:scale-105 transition-transform disabled:opacity-50"
                             >
                               {submitting ? 'Copying...' : 'Copy'}
                             </button>
                           </div>
-                          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p className="text-sm text-blue-800">
+                          <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                            <p className="text-sm text-slate-800">
                               <strong>Amount to send:</strong> {formatPrice(Number(selectedEvent.price), 'USD')} worth of {cryptoCurrency.toUpperCase()}
                             </p>
-                            <p className="text-sm text-blue-600 mt-2">
+                            <p className="text-sm text-slate-600 mt-2">
                               Send the exact amount to this address. Your booking will be confirmed after payment is verified.
                             </p>
                           </div>
@@ -330,11 +345,8 @@ const EventsPaymentSystem = () => {
                       <div className="mt-8">
                         <button
                           disabled={submitting}
-                          onClick={() => {
-                            submit();
-                            setPaymentStep(3);
-                          }}
-                          className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-xl font-semibold hover:scale-105 flex items-center justify-center transition-transform disabled:opacity-50"
+                          onClick={() => submitPayment()}
+                          className="w-full bg-gradient-to-r from-cyan-500 to-slate-600 text-white py-4 rounded-xl font-semibold hover:scale-105 flex items-center justify-center transition-transform disabled:opacity-50"
                         >
                           {submitting ? 'Getting Payment Details...' : 'Get Payment Details'}
                           <ExternalLink className="ml-2 h-5 w-5" />
@@ -398,6 +410,7 @@ const EventsPaymentSystem = () => {
               )}
             </div>
           </div>
+         
         </div>
       )}
     </div>

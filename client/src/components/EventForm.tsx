@@ -8,12 +8,12 @@ import { baseURL } from "@/lib/api"
 import { toast } from "react-hot-toast/headless"
 
 interface EventFormProps {
-  patch?: boolean
+ 
   existingEvent?: Event
   onClose: () => void
 }
 
-export default function EventForm({ patch, existingEvent, onClose }: EventFormProps) {
+export default function EventForm({ existingEvent, onClose }: EventFormProps) {
   const [eventData, setEventData] = useState<Event>(
     existingEvent || {
       id: 0,
@@ -41,10 +41,10 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
 
     const url = existingEvent ? `/event/${existingEvent.id}` : '/event'
 
-    const method = existingEvent ? "PATCH" : "POST"
+    const method = existingEvent ? "PUT" : "POST"
 
     try {
-      const response = await fetch(`${baseURL}/${url}`, {
+      const response = await fetch(`${baseURL}${url}`, {
         method,
         headers: {
           "Content-Type": "application/json",
@@ -74,10 +74,10 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
   }
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-blue-50 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold text-blue-900 mb-6 flex items-center gap-2">
-        <TagIcon className="w-6 h-6 text-blue-700" />
-        {patch ? "Edit Event" : "Create New Event"}
+    <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-slate-50 max-w-2xl mx-auto">
+      <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <TagIcon className="w-6 h-6 text-slate-700" />
+        {existingEvent ? "Edit Event" : "Create New Event"}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,7 +87,7 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
           value={eventData.title}
           onChange={handleChange}
           placeholder="Event Title"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <div className="grid grid-cols-2 gap-4">
           <input
@@ -95,14 +95,14 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
             name="date"
             value={eventData.date}
             onChange={handleChange}
-            className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+            className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
           />
           <input
             type="time"
             name="time"
             value={eventData.time}
             onChange={handleChange}
-            className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+            className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
           />
         </div>
         <input
@@ -111,7 +111,7 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
           value={eventData.location}
           onChange={handleChange}
           placeholder="Location"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <input
           type="number"
@@ -119,7 +119,7 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
           value={eventData.price}
           onChange={handleChange}
           placeholder="Price in USD"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <input
           type="text"
@@ -127,7 +127,7 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
           value={eventData.category}
           onChange={handleChange}
           placeholder="Category"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <input
           type="text"
@@ -135,22 +135,22 @@ export default function EventForm({ patch, existingEvent, onClose }: EventFormPr
           value={eventData.attendees}
           onChange={handleChange}
           placeholder="Attendees"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <textarea
           name="description"
           value={eventData.description}
           onChange={handleChange}
           placeholder="Description"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
-        <button className="px-8 py-3 bg-blue-700 text-white rounded-xl hover:bg-blue-800 w-full">
+        <button className="px-8 py-3 bg-slate-700 text-white rounded-xl hover:bg-slate-800 w-full">
           {isSubmitting ? (
               <>
                 <span className="animate-spin">🌀</span>
                 Processing...
               </>
-            ) : patch ? "Update Event" : "Create Event"}
+            ) : existingEvent ? "Update Event" : "Create Event"}
         </button>
       </form>
     </div>

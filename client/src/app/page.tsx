@@ -237,6 +237,102 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </section>
+              {/* Events Section */}
+        <section className="py-24 bg-gradient-to-b from-slate-900/30 to-black">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center mb-16">
+              <div>
+                <div className="inline-flex items-center space-x-2 bg-slate-800/50 border border-slate-700/50 rounded-full px-6 py-3 mb-6">
+                  <Calendar className="h-4 w-4 text-cyan-400" />
+                  <span className="text-slate-300 text-sm font-medium">Professional Development</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+                  Elite Training
+                  <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                    Programs
+                  </span>
+                </h2>
+                <p className="text-xl text-slate-300 max-w-2xl">
+                  Executive-level cybersecurity training for professionals and organizations
+                </p>
+              </div>
+              <Link href="/events" className="hidden lg:inline-flex items-center bg-slate-800 border border-slate-700 text-white px-6 py-3 rounded-xl font-semibold hover:border-cyan-400 transition-all">
+                View All Programs
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Link>
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-8">
+              {upcomingEvents.map((event) => (
+                <div key={event.id} className="group bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden hover:border-cyan-400/50 transition-all duration-500 hover:transform hover:scale-[1.02] backdrop-blur-sm">
+                  <div className="p-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="bg-gradient-to-r from-cyan-500/20 to-blue-600/20 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold border border-cyan-500/20">
+                        {event.category}
+                      </span>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-white">${event.price}</div>
+                        <div className="text-slate-400 text-xs">per person</div>
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
+                      {event.title}
+                    </h3>
+                    
+                    <p className="text-slate-400 mb-6 text-sm">{event.description}</p>
+                    
+                    <div className="space-y-3 mb-6 text-sm">
+                      <div className="flex items-center text-slate-300">
+                        <Calendar className="h-4 w-4 mr-3 text-cyan-400" />
+                        {new Date(event.date).toLocaleDateString('en-US', { 
+                          month: 'long', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                        })} at {event.time}
+                      </div>
+                      <div className="flex items-center text-slate-300">
+                        <MapPin className="h-4 w-4 mr-3 text-cyan-400" />
+                        {event.location}
+                      </div>
+                      <div className="flex items-center text-slate-300">
+                        <Users className="h-4 w-4 mr-3 text-cyan-400" />
+                        For {event.attendees}
+                      </div>
+                    </div>
+                    
+                    <button
+                    onClick={()=>router.push(`/attend/${event.id}`)} className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+                      Register Now
+                    </button>
+                  </div>
+                          <div className="flex items-center space-x-4">
+                    <div className="bg-gradient-to-br from-cyan-500/20 to-blue-600/20 p-3 md:p-4 rounded-xl border border-cyan-500/20 flex-shrink-0">
+                      <Mail className="h-5 w-5 md:h-6 md:w-6 text-cyan-400" />
+                    </div>
+                  <div>
+  <p className="text-sm md:text-base font-semibold text-slate-300">Email Us</p>
+  <a 
+    href="mailto:support@klitzcybersecurity.com" 
+    className="text-cyan-400 hover:underline"
+  >
+    support@klitzcybersecurity.com
+  </a>
+</div>
+
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-12 lg:hidden">
+              <Link href="/events" className="inline-flex items-center bg-slate-800 border border-slate-700 text-white px-8 py-4 rounded-xl font-semibold hover:border-cyan-400 transition-all">
+                View All Programs
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+        </section>
 
         {/* Enterprise Services */}
         <section className="py-24 bg-gradient-to-b from-slate-900/50 to-black">
@@ -354,87 +450,7 @@ const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* Events Section */}
-        <section className="py-24 bg-gradient-to-b from-slate-900/30 to-black">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center mb-16">
-              <div>
-                <div className="inline-flex items-center space-x-2 bg-slate-800/50 border border-slate-700/50 rounded-full px-6 py-3 mb-6">
-                  <Calendar className="h-4 w-4 text-cyan-400" />
-                  <span className="text-slate-300 text-sm font-medium">Professional Development</span>
-                </div>
-                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
-                  Elite Training
-                  <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                    Programs
-                  </span>
-                </h2>
-                <p className="text-xl text-slate-300 max-w-2xl">
-                  Executive-level cybersecurity training for professionals and organizations
-                </p>
-              </div>
-              <Link href="/events" className="hidden lg:inline-flex items-center bg-slate-800 border border-slate-700 text-white px-6 py-3 rounded-xl font-semibold hover:border-cyan-400 transition-all">
-                View All Programs
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </Link>
-            </div>
-
-            <div className="grid lg:grid-cols-3 gap-8">
-              {upcomingEvents.map((event) => (
-                <div key={event.id} className="group bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden hover:border-cyan-400/50 transition-all duration-500 hover:transform hover:scale-[1.02] backdrop-blur-sm">
-                  <div className="p-8">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="bg-gradient-to-r from-cyan-500/20 to-blue-600/20 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold border border-cyan-500/20">
-                        {event.category}
-                      </span>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-white">${event.price}</div>
-                        <div className="text-slate-400 text-xs">per person</div>
-                      </div>
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
-                      {event.title}
-                    </h3>
-                    
-                    <p className="text-slate-400 mb-6 text-sm">{event.description}</p>
-                    
-                    <div className="space-y-3 mb-6 text-sm">
-                      <div className="flex items-center text-slate-300">
-                        <Calendar className="h-4 w-4 mr-3 text-cyan-400" />
-                        {new Date(event.date).toLocaleDateString('en-US', { 
-                          month: 'long', 
-                          day: 'numeric', 
-                          year: 'numeric' 
-                        })} at {event.time}
-                      </div>
-                      <div className="flex items-center text-slate-300">
-                        <MapPin className="h-4 w-4 mr-3 text-cyan-400" />
-                        {event.location}
-                      </div>
-                      <div className="flex items-center text-slate-300">
-                        <Users className="h-4 w-4 mr-3 text-cyan-400" />
-                        For {event.attendees}
-                      </div>
-                    </div>
-                    
-                    <button
-                    onClick={()=>router.push(`/attend/${event.id}`)} className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
-                      Register Now
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center mt-12 lg:hidden">
-              <Link href="/events" className="inline-flex items-center bg-slate-800 border border-slate-700 text-white px-8 py-4 rounded-xl font-semibold hover:border-cyan-400 transition-all">
-                View All Programs
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </Link>
-            </div>
-          </div>
-        </section>
+  
 {/* Contact Section */}
         <section className="py-12 md:py-24 bg-gradient-to-b from-slate-900/50 to-black">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -460,10 +476,16 @@ const HomePage: React.FC = () => {
                     <div className="bg-gradient-to-br from-cyan-500/20 to-blue-600/20 p-3 md:p-4 rounded-xl border border-cyan-500/20 flex-shrink-0">
                       <Mail className="h-5 w-5 md:h-6 md:w-6 text-cyan-400" />
                     </div>
-                    <div>
-                      <p className="text-sm md:text-base font-semibold text-slate-300">Email Us</p>
-                      <p className="text-cyan-400">contact@securitycompany.com</p>
-                    </div>
+                  <div>
+  <p className="text-sm md:text-base font-semibold text-slate-300">Email Us</p>
+  <a 
+    href="mailto:support@klitzcybersecurity.com" 
+    className="text-cyan-400 hover:underline"
+  >
+    support@klitzcybersecurity.com
+  </a>
+</div>
+
                   </div>
                   
                   <div className="flex items-center space-x-4">

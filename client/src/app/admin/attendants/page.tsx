@@ -72,7 +72,7 @@ export default function ManagerCrudPage() {
     return (
       <AdminOffCanvas>
       <div className="flex justify-center py-12">
-        <Spinner className="w-10 h-10 text-blue-600" />
+        <Spinner className="w-10 h-10 text-slate-600" />
       </div>
       </AdminOffCanvas>
     );

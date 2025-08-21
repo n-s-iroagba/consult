@@ -62,15 +62,15 @@ const AdminDashboard = () => {
       <AdminOffcanvas>
         {isLoading ? (
           <div className="flex justify-center items-center h-screen px-4">
-            <Spinner className="w-8 h-8 text-blue-600" />
+            <Spinner className="w-8 h-8 text-slate-600" />
           </div>
         ) : (
           <div className="space-y-6">
             <div className="text-center py-8">
-              <h1 className="text-3xl font-bold text-blue-900 mb-2">
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">
                 Welcome back, {user.username}! 👋
               </h1>
-              <p className="text-blue-700">Here&apos;s what needs your attention</p>
+              <p className="text-slate-700">Here&apos;s what needs your attention</p>
             </div>
 
             {todos.length > 0 ? (
@@ -84,15 +84,15 @@ const AdminDashboard = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-semibold text-blue-900 mb-2">All Set! 🎉</h2>
-                <p className="text-blue-700">Everything looks good. No immediate actions required.</p>
+                <h2 className="text-2xl font-semibold text-slate-900 mb-2">All Set! 🎉</h2>
+                <p className="text-slate-700">Everything looks good. No immediate actions required.</p>
               </div>
             )}
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                <h3 className="font-semibold text-blue-900 mb-2">Total events</h3>
-                <p className="text-2xl font-bold text-blue-600">{events?.length}</p>
+              <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                <h3 className="font-semibold text-slate-900 mb-2">Total events</h3>
+                <p className="text-2xl font-bold text-slate-600">{events?.length}</p>
               </div>
               <div className="bg-green-50 rounded-lg p-4 border border-green-200">
                 <h3 className="font-semibold text-green-900 mb-2">Active Wallets</h3>

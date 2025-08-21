@@ -64,14 +64,14 @@ export default function AdminSignupPage() {
   if (!isMounted) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-50 p-4">
-      <div className="bg-white rounded-2xl shadow-sm border-2 border-blue-50 relative max-w-md w-full p-8">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+      <div className="bg-white rounded-2xl shadow-sm border-2 border-slate-50 relative max-w-md w-full p-8">
         {/* Decorative Corner Borders */}
-        <div className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-blue-800 opacity-20" />
-        <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-blue-800 opacity-20" />
+        <div className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-slate-800 opacity-20" />
+        <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-slate-800 opacity-20" />
 
-        <h1 className="text-2xl font-bold text-blue-900 mb-8 text-center flex items-center justify-center gap-2">
-          <UserCircleIcon className="w-8 h-8 text-blue-700" />
+        <h1 className="text-2xl font-bold text-slate-900 mb-8 text-center flex items-center justify-center gap-2">
+          <UserCircleIcon className="w-8 h-8 text-slate-700" />
           Admin Registration
         </h1>
 
@@ -89,7 +89,7 @@ export default function AdminSignupPage() {
             { label: 'Confirm Password', name: 'confirmPassword', type: 'password', Icon: LockClosedIcon },
           ].map(({ label, name, type, Icon }) => (
             <div key={name}>
-              <label className="block text-sm font-medium text-blue-700 mb-2 flex items-center gap-1">
+              <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
                 <Icon className="w-4 h-4" />
                 {label}
               </label>
@@ -100,8 +100,8 @@ export default function AdminSignupPage() {
                 onChange={handleChange}
                 required
                 className={`w-full p-3 rounded-xl border-2 text-black ${
-                  error?.toLowerCase().includes(name) ? 'border-red-300' : 'border-blue-100'
-                } focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all`}
+                  error?.toLowerCase().includes(name) ? 'border-red-300' : 'border-slate-100'
+                } focus:border-slate-500 focus:ring-2 focus:ring-slate-200 transition-all`}
               />
             </div>
           ))}
@@ -109,7 +109,7 @@ export default function AdminSignupPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3 bg-blue-700 text-white rounded-xl hover:bg-blue-800 disabled:bg-blue-400 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+            className="w-full py-3 bg-slate-700 text-white rounded-xl hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
           >
             {submitting ? (
               <>

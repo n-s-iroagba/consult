@@ -36,12 +36,12 @@ export default function BankForm({ patch, existingBank, onClose }: BankFormProps
  
      setIsSubmitting(true)
 
-     const url = existingBank ? `/banks/${existingBank.id}` : '/banks'
+     const url = existingBank ? `/bank/${existingBank.id}` : '/bank'
 
-     const method = existingBank ? "PATCH" : "POST"
+     const method = existingBank ? "PUT" : "POST"
 
      try {
-       const response = await fetch(`${baseURL}/${url}`, {
+       const response = await fetch(`${baseURL}${url}`, {
          method,
          headers: {
            "Content-Type": "application/json",
@@ -77,9 +77,9 @@ export default function BankForm({ patch, existingBank, onClose }: BankFormProps
    }
  
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-blue-50 max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold text-blue-900 mb-6 flex items-center gap-2">
-        <BanknotesIcon className="w-6 h-6 text-blue-700" />
+    <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-slate-50 max-w-xl mx-auto">
+      <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <BanknotesIcon className="w-6 h-6 text-slate-700" />
         {patch ? "Edit Bank" : "Add New Bank"}
       </h2>
 
@@ -90,7 +90,7 @@ export default function BankForm({ patch, existingBank, onClose }: BankFormProps
           value={bankData.bankName}
           onChange={handleChange}
           placeholder="Bank Name"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <input
           type="text"
@@ -98,7 +98,7 @@ export default function BankForm({ patch, existingBank, onClose }: BankFormProps
           value={bankData.accountName}
           onChange={handleChange}
           placeholder="Account Name"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <input
           type="text"
@@ -106,7 +106,7 @@ export default function BankForm({ patch, existingBank, onClose }: BankFormProps
           value={bankData.accountNumber}
           onChange={handleChange}
           placeholder="Account Number"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <input
           type="text"
@@ -114,7 +114,7 @@ export default function BankForm({ patch, existingBank, onClose }: BankFormProps
           value={bankData.swiftCode}
           onChange={handleChange}
           placeholder="SWIFT Code"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
         <input
           type="text"
@@ -122,10 +122,10 @@ export default function BankForm({ patch, existingBank, onClose }: BankFormProps
           value={bankData.routingNumber}
           onChange={handleChange}
           placeholder="Routing Number"
-          className="w-full p-3 rounded-xl border-2 border-blue-100 focus:border-blue-500"
+          className="w-full p-3 rounded-xl border-2 border-slate-100 focus:border-slate-500 text-black"
         />
 
-        <button className="px-8 py-3 bg-blue-700 text-white rounded-xl hover:bg-blue-800 w-full">
+        <button className="px-8 py-3 bg-slate-700 text-white rounded-xl hover:bg-slate-800 w-full">
          {isSubmitting ?  (
               <>
                 <span className="animate-spin">🌀</span>
